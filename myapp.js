@@ -24,19 +24,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/initialize', (req, res) => {
-  const query = `CREATE TABLE IF NOT EXISTS login (
-							UserId varchar,
-							Password varchar
-						);
-						
-						
-						`;
-	const logMessage = 'Table is successfully created';
-	executeQuery(query,logMessage)
-  res.send(logMessage);
-});
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
