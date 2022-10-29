@@ -60,7 +60,10 @@ const query = `CREATE TABLE IF NOT EXISTS login (
 							Status VARCHAR,
 							CONSTRAINT fk_userDetails
 								FOREIGN KEY(StudentId) 
-									REFERENCES userDetails(Id)
+									REFERENCES userDetails(Id),
+							CONSTRAINT fk_quiz
+								FOREIGN KEY(QuizId) 
+									REFERENCES quiz(QuizId)
 						);
 						`;
 const logMessage = 'Tables are successfully created';
