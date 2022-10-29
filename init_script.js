@@ -1,21 +1,4 @@
-const dotenv = require('dotenv')
-dotenv.config();
-const { Client } = require('pg');
-const client = new Client({"connectionString": process.env.CONNECTION_STRING});
-client.connect();
-
-const executeQuery = (query,logMessage) => {
-	client.query(query, (err, res) => {
-															if (err) {
-																console.log(err);
-																return;
-															}
-															console.log(logMessage);
-															client.end();
-														}
-						);
-};
-
+const {executeQuery} = require('./helpers');
 const query = `CREATE TABLE IF NOT EXISTS login (
 							UserId VARCHAR PRIMARY KEY UNIQUE,
 							Password VARCHAR NOT NULL,
