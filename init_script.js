@@ -8,6 +8,7 @@ const query = `CREATE TABLE IF NOT EXISTS login (
 							UserId VARCHAR PRIMARY KEY,
 							Name VARCHAR,
 							Email VARCHAR,
+							Role VARCHAR,
 							Id VARCHAR UNIQUE,
 							CONSTRAINT fk_login
 								FOREIGN KEY(UserId) 
@@ -61,7 +62,7 @@ const query = `CREATE TABLE IF NOT EXISTS login (
 							Status VARCHAR,
 							CONSTRAINT fk_userDetails
 								FOREIGN KEY(StudentId) 
-									REFERENCES userDetails(Id),
+									REFERENCES login(UserId),
 							CONSTRAINT fk_quiz
 								FOREIGN KEY(QuizId) 
 									REFERENCES quiz(QuizId)

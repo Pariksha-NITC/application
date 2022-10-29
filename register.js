@@ -6,9 +6,12 @@ router.get('/', (req,res) => {
 });
 router.post('/', (req,res) => {
 	//res.send(req.body);
-	const query = `INSERT INTO login(userid,password,loggedin) VALUES ('${req.body.uid}','${req.body.pwd}',TRUE);`;
+	const query = `INSERT INTO login(userid,password,loggedin) VALUES ('${req.body.uid}','${req.body.pwd}',TRUE);
+	INSERT INTO userdetails(userid,role) VALUES ('${req.body.uid}','${req.body.role}');`;
+	
 	//${response.StudId},${response.ans},${response.marks},${response.feedback});`;
 	const logMessage = 'User successfully added';
-	executeQuery(query,logMessage)
+	executeQuery(query,logMessage);
+	res.send("You have successfully registered");
 });
 module.exports = router;

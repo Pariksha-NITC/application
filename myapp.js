@@ -20,15 +20,16 @@ defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
 
-const registerRoutes = require('./register');
-app.use('/register',registerRoutes);
 
-//const studentRoutes = require('./student');
-//app.use('/student',studentRoutes);
+
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 }) 
+
+const registerRoutes = require('./register');
+app.use('/register',registerRoutes);
 
 const loginRoutes = require('./login');
 app.use('/',loginRoutes);
@@ -49,10 +50,15 @@ app.use(async(req,res,next)=>{
 	res.render('login',{layout:null});
 });
 
+const studentRoutes = require('./student');
+app.use('/student',studentRoutes);
 
 app.get('/protectedRoute',(req,res)=>{
 	res.send('Successfully reached');		
 });
+/*app.use('/student',(req,res) =>{
+	res.status(404).send('Not found');
+});*/
 
 app.listen(port, () => {
   console.log(`Quiz app listening on port ${port}`)

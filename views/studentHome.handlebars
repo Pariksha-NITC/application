@@ -153,9 +153,16 @@ background-color:#e9e9e9;
 #action_items{
 	
 }
-#main_area{
+#addQn_area{
 	margin-top:2%;
 	margin-left:40%;
+	//padding:5px;
+	//display:flex;
+}
+#QuizList{
+	padding-top:2%;
+	padding-left:5%;
+	background-color:rgba(175, 50, 80, 0.2);
 	//padding:5px;
 	//display:flex;
 }
@@ -175,11 +182,20 @@ background-color:#e9e9e9;
 
 <!-- <div id = "right_panel"> -->
 	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->
-<div id ="main_area">
-	<form action="/authquiz" method="post">
+	<div id ="addQn_area">
+	<form action="/student/addQuiz" method="post">
 	<div class="input"><input type = "text" name="qzcode" placeholder="Quiz Code"><br><input type = "text" name="qzpwd" placeholder="Quiz Password"><br><input type = "submit" value="Authenticate" style="cursor:pointer;"></div><br><br>
 	</form>
-	
+	<br>
+	<br>
+	</div>
+	<div id="QuizList">
+	<ul>
+	{{#each quizArray}}
+		<li>{{ quizname }}</li>
+	{{/each}}
+	</ul>
+	</div> 
 	<!--div id = "question_area">
 	<!--div id="question_type_area">Question type: MCQ</div-->
 	<!--div id="question_description">
@@ -198,7 +214,7 @@ background-color:#e9e9e9;
 		
 	</div-->
 	
-</div>
+
 <!-- </div> -->
 </body>
 </html>

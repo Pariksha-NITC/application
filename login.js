@@ -9,15 +9,22 @@ router.get('/login',(req,res) => {
 router.post('/login',async(req,res) => {
 	//if(req.cookies.cookie == )
 	//res.send('Already logged in');
-	const query = `SELECT * FROM login WHERE userid='${req.body.userID}';`;
-	const logMessage = 'User trying to log in';
-	const msg = await executeQuery(query,logMessage)
+	let query = `SELECT * FROM login WHERE userid='${req.body.userID}';`;
+	let logMessage = 'User trying to log in';
+	let queryOutArrFromLogin = await executeQuery(query,logMessage)
 	//console.log(msg);
-	if(msg)
+	if(queryOutArrFromLogin)
 	{
-		if(msg[0].password === req.body.password)
+		if(queryOutArrFromLogin[0].password === req.body.password)
 		{
 			res.cookie('cookie', `${req.body.userID}`);
+			query = `SELECT * FROM userdetails WHERE userid='${req.body.userID}';`;
+			logMessage = 'User trying to log in';
+			let Users = await executeQuery(query,logMessage)
+			//console.log(Roles);
+			if(Users[0].role === 'student')
+				res.redirect(303,'/student')
+			else
 			res.send('Successful');
 		}
 		else
