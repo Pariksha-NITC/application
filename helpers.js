@@ -1,10 +1,11 @@
 const dotenv = require('dotenv')
 dotenv.config();
 const { Client } = require('pg');
-const client = new Client({"connectionString": process.env.CONNECTION_STRING});
+
 
 async function executeQuery(query,logMessage)
 {
+	const client = new Client({"connectionString": process.env.CONNECTION_STRING});
 	client.connect();
 	var resp;
 	resp = await client.query(query);
