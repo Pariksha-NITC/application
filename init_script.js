@@ -54,6 +54,14 @@ const query = `CREATE TABLE IF NOT EXISTS login (
 								FOREIGN KEY(StudentId) 
 									REFERENCES userDetails(Id)
 						);
+						CREATE TABLE IF NOT EXISTS studentQuiz (
+							StudentId VARCHAR,
+							QuizId VARCHAR,
+							Status VARCHAR,
+							CONSTRAINT fk_userDetails
+								FOREIGN KEY(StudentId) 
+									REFERENCES userDetails(Id)
+						);
 						`;
 const logMessage = 'Tables are successfully created';
 executeQuery(query,logMessage)
