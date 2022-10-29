@@ -15,6 +15,7 @@ const query = `CREATE TABLE IF NOT EXISTS login (
 						);
 						CREATE TABLE IF NOT EXISTS quiz (
 							QuizId VARCHAR PRIMARY KEY UNIQUE,
+							QuizName VARCHAR,
 							Duration NUMERIC,
 							TotalMarks NUMERIC,
 							Passkey VARCHAR,
