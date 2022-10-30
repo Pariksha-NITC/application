@@ -34,4 +34,13 @@ router.post('/addQuiz', async(req,res) => {
 	
 })
 
+router.post('/viewQuiz',async(req,res) =>{
+	let quizid = req.body.qzcode;
+	const quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
+	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
+	quizDetails.instructor = instructor.name;
+	//console.log(quizDetails)
+	res.render('qhmp',{layout:null,quiz:quizDetails})
+})
+
 module.exports = router;

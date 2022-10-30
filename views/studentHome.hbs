@@ -192,10 +192,18 @@ background-color:#e9e9e9;
 	<div id="QuizList">
 	<ul>
 	{{#each quizArray}}
-		<li>{{ quizname }}</li>
+		<li>
+			<form action="/student/viewQuiz" method="post">
+			<input type="hidden" name="qzcode" value={{quizid}}>
+			<a href="#" onclick="this.parentNode.submit()">{{ quizname }}</a>
+			</form>
+		</li>
 	{{/each}}
 	</ul>
 	</div> 
+	<script>
+		function gotoQuiz
+	</script>
 	<!--div id = "question_area">
 	<!--div id="question_type_area">Question type: MCQ</div-->
 	<!--div id="question_description">
