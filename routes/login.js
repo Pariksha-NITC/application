@@ -19,60 +19,45 @@ router.get('/login',(req,res) => {
 router.post('/login',async(req,res) => {	
 	//if(req.cookies.cookie == )
 	//res.send('Already logged in');
-	const query = `SELECT * FROM login WHERE userid='${req.body.userID}';`;
+	//const query = `SELECT * FROM login WHERE userid='${req.body.userID}';`;
 	const logMessage = 'User trying to log in';
-	// let userID = req.body.userID;
-	// let passwd = req.body.password;
-	// try {
-	// 	let user = await db.one('SELECT userid,password FROM login WHERE userid=$1', [userID]);
-	// 	const match = await bcrypt.compare(passwd, user.password);
-	// 	if (match) {
-	// 		var session = req.session;
-	// 		session.userID=userID;
-	// 		session.role='student';
-	// 		console.log(req.session);
-	// 		console.log('Log in successful');
-	// 		res.send('Successful');
-	// 	}
-	// 	else {
-	// 		res.render('login',{layout:null,wrong:true});
-	// 	}
-	// }
-	// catch(e) {
-	// 	if (e instanceof QueryResultError && e.code === qrec.noData)
-	// 		res.render('login',{layout:null,wrong:true});
-	// 	else
-	// 		throw e;
-	// }
-	console.log(query);
-	const msg = await executeQuery(query,logMessage)
-	console.log(msg);
-	if(msg)
-	{
-		if(msg[0].password === req.body.password)
-		{
-			res.cookie('cookie', `${req.body.userID}`);
-			res.send('Successful');
-		}
-		else
-		{
-			res.render('login',{layout:null,wrong:true});
-		}
-	}
-	else
-	{
-		res.render('login',{layout:null,wrong:true});
-	}
+	let userID = req.body.userID;
+	let passwd = req.body.password;
+	try {
+	 	let user = await db.one('SELECT userid,password FROM login WHERE userid=$1', [userID]);
+	 	let userRole = await db.one('SELECT role FROM userdetails WHERE userid=$1', [userID]);
+		const match = await bcrypt.compare(passwd, user.password);
+	 	if (match) {
+	 		var session = req.session;
+	 		session.userID=userID;
+	 		session.role=userRole;
+	 		console.log(req.session);
+	 		console.log('Log in successful');
+			await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
+			if(userRole === 'student')
+				res.redirect(303,'/student')
+		 	else
+		 		res.send('Successful');
+	 	}
+	 	else {
+	 		res.render('login',{layout:null,wrong:true});
+	 	}
+	 }
+	 catch(e) {
+	 	if (e instanceof QueryResultError && e.code === qrec.noData)
+	 		res.render('login',{layout:null,wrong:true});
+	 	else
+	 		throw e;
+	 }
+	
 	
 })
 
 router.get('/logout', (req,res) => {
-	//res.send(req.cookies.cookie)
-	//res.render('login',{ layout: null });
-	// res.clearCookie('cookie')
+	await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [session.userID]);
 	req.session.destroy();
 	console.log("logged out successfully");
-	res.redirect('/login');
+	res.redirect(303,'/login');
 })
 
 module.exports = router;
