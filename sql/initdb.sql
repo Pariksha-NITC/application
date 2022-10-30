@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS userDetails (
     UserId VARCHAR PRIMARY KEY,
     Name VARCHAR,
     Email VARCHAR,
+	Role VARCHAR,
     Id VARCHAR UNIQUE,
     CONSTRAINT fk_login
         FOREIGN KEY(UserId) 
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     TeacherId VARCHAR,
     CONSTRAINT fk_userDetails
         FOREIGN KEY(TeacherId) 
-            REFERENCES userDetails(Id)
+            REFERENCES userDetails(UserId)
             ON DELETE CASCADE
 );
 
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS response (
             ON DELETE CASCADE,
     CONSTRAINT fk_userDetails
         FOREIGN KEY(StudentId) 
-            REFERENCES userDetails(Id)
+            REFERENCES userDetails(UserId)
             ON DELETE CASCADE
 );
 
@@ -78,7 +79,7 @@ CREATE TABLE IF NOT EXISTS studentQuiz (
     Status VARCHAR,
     CONSTRAINT fk_userDetails
         FOREIGN KEY(StudentId) 
-            REFERENCES userDetails(Id)
+            REFERENCES userDetails(UserId)
             ON DELETE CASCADE,
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
