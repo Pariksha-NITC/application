@@ -54,7 +54,7 @@ router.post('/login',async(req,res) => {
 })
 
 router.get('/logout', async(req,res) => {
-	await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [session.userID]);
+	await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [req.session.userID]);
 	req.session.destroy();
 	console.log("logged out successfully");
 	res.redirect(303,'/login');
