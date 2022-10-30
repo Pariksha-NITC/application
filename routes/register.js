@@ -13,10 +13,13 @@ router.get('/', (req,res) => {
 router.post('/', async (req,res) => {
 	let userID = req.body.uid;
 	let passwd = req.body.pwd;
+	let role = req.body.role;
 	try {
 		const hashedPasswd = await bcrypt.hash(passwd, parseInt(process.env.SALT_ROUNDS));
 		await db.none('INSERT INTO login(userid,password,loggedin) VALUES ($1,$2,FALSE)', [userID, hashedPasswd]);
+		await db.none('INSERT INTO userdetails(userid,role) VALUES ($1,$2)', [userID,role]);
 		console.log('User successfully added');
+		res.send("You have successfully registered");
 	}
 	catch(e) {
 		throw e;

@@ -34,7 +34,7 @@ router.post('/login',async(req,res) => {
 	 		console.log(req.session);
 	 		console.log('Log in successful');
 			await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
-			if(userRole === 'student')
+			if(userRole.role === 'student')
 				res.redirect(303,'/student')
 		 	else
 		 		res.send('Successful');
@@ -53,7 +53,7 @@ router.post('/login',async(req,res) => {
 	
 })
 
-router.get('/logout', (req,res) => {
+router.get('/logout', async(req,res) => {
 	await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [session.userID]);
 	req.session.destroy();
 	console.log("logged out successfully");
