@@ -20,18 +20,15 @@ defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
 
-
-
+const registerRoutes = require('./routes/register');
+app.use('/register',registerRoutes);
 
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 }) 
 
-const registerRoutes = require('./register');
-app.use('/register',registerRoutes);
-
-const loginRoutes = require('./login');
+const loginRoutes = require('./routes/login');
 app.use('/',loginRoutes);
 
 app.use(async(req,res,next)=>{

@@ -1,0 +1,80 @@
+<html>
+<head>
+<style>
+body{
+	margin:0px;
+}
+#app_header{
+	background-color:#d6d6f5;
+	color:#3333cc;
+	height: clamp(45px, 9vh, 55px);
+	text-transform:uppercase;
+	font-size:20px;
+	letter-spacing:2px;
+	text-align:center;
+	padding-top:15px;
+	//padding-bottom:20px;
+	font-family:sans-serif;
+	border-bottom: 1px solid black;
+}
+#form{
+	background-color:#dccae0;
+	width:32%;
+	height:27%;
+	padding:2%;
+	padding-left:7%;
+	padding-top:5%;
+	margin-left:30%;
+	margin-top:1%;
+	//align-items:center;
+}
+.row{
+	//display:table;
+	//background-color:red;
+	//border:2px solid black;
+	//margin:12px;
+	//padding:7px;
+	//border-bottom:1px solid black;
+}
+.label{
+	float:left;
+	width:40%;
+	//background-color:cyan;
+	border-right:1px solid black;
+}
+.input{
+	float:right;
+	width:50%;
+}
+input{
+ border-radius:3px;
+ border-color:#dccae0;
+ z-index:40;
+}
+</style>
+</head>
+<body>
+<div id="app_header">
+	Pariksha-NITC
+</div>
+<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">Registration Form</div>
+<div id="form">
+<form action="/register" method="post">
+<div class="row">
+<div class ="label">UserID:</div><div class="input"><input type = "text" name="uid" placeholder="Enter a UserID"></div><br><br>
+</div>
+<div class="row">
+<div class ="label">Name:</div><div class="input"><input type = "text" name="name" placeholder="Enter your name"></div><br><br>
+</div>
+<div class="row">
+<div class ="label">Password:</div><div class="input"><input type = "password" name="pwd" placeholder="Create your password"></div><br><br>
+</div>
+<div class="row">
+<div class ="label">Confirm Password:</div><div class="input"><input type = "password" placeholder="Re-enter your password"></div><br><br>
+</div>
+<div style="padding-left:35%;padding-top:5%;">
+<input type = "submit" value="Submit" style="border-radius:20px;cursor:pointer;">
+</div>
+</form>
+</div>
+</body>
