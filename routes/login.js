@@ -8,12 +8,12 @@ const {db, QueryResultError, qrec} = require('../db');
 const {executeQuery} = require('../helpers');
 
 router.get('/login',(req,res) => {
-	// if (req.session.userID) {
-	// 	console.log(req.session.userID);
-	// 	res.send("Successful");
-	// }
-	// else
-		res.render('login',{ layout: null });
+	if (req.session.userID) {
+		console.log(req.session.userID);
+		res.send("Successful");
+	}
+	else
+		res.render('login');
 })
 
 router.post('/login',async(req,res) => {	
@@ -30,7 +30,7 @@ router.post('/login',async(req,res) => {
 	 	if (match) {
 	 		var session = req.session;
 	 		session.userID=userID;
-	 		session.role=userRole;
+	 		session.role=userRole.role;
 	 		console.log(req.session);
 	 		console.log('Log in successful');
 			await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
@@ -40,12 +40,12 @@ router.post('/login',async(req,res) => {
 		 		res.send('Successful');
 	 	}
 	 	else {
-	 		res.render('login',{layout:null,wrong:true});
+	 		res.render('login',{wrong:true});
 	 	}
 	 }
 	 catch(e) {
 	 	if (e instanceof QueryResultError && e.code === qrec.noData)
-	 		res.render('login',{layout:null,wrong:true});
+	 		res.render('login',{wrong:true});
 	 	else
 	 		throw e;
 	 }
