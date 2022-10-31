@@ -89,10 +89,14 @@
         <div class="duration" style="padding:0.2%">Duration : {{quiz.duration}} minutes</div>
         <div class="maxMarks" style="padding:0.2%">Maximum Marks : {{quiz.totalmarks}} </div>
         <div class="timer" id="timer" style="padding:0.2%"></div>
-        <div class="code" style="padding:0.2%">Quiz Code : <input type="password" name="pword" size="15" maxlength="6"></div>
-        <div id="link"></div>
+        <!--div class="code" style="padding:0.2%">Quiz Code : <input type="password" name="pword" size="15" maxlength="6"></div-->
+        <form action="/student/initiateAttempt" method="post">
+            <input type="hidden" name="qzcode" value={{quiz.quizid}}>
+            <div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Attempt Quiz"></div>
+            <div id="link"></div>
+        </form>
     </div>
-    <script>
+    <!--script>
         var countDownDate = new Date("Oct 6, 2022 09:08:30").getTime();
         var x=setInterval(function (){
             var currentDate=new Date().getTime();
@@ -109,10 +113,10 @@
             document.getElementById("timer").innerHTML=time ;
             if(differnce<=0){
                 document.getElementById("timer").innerHTML="" ;
-                var html='<div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Attempt Quiz"> </div>';
+                var html='<div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Attempt Quiz"></div>';
                 document.getElementById("link").innerHTML=html;
             }
         });
-    </script>
+    </script-->
 </body>
 </html>

@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const { db } = require('../db');
 const router = express.Router();
 const {executeQuery} = require('../helpers');
@@ -42,5 +43,27 @@ router.post('/viewQuiz',async(req,res) =>{
 	//console.log(quizDetails)
 	res.render('qhmp',{layout:null,quiz:quizDetails})
 })
+router.post('/initiateAttempt',async(req,res) => {
+	let qzcode = req.body.qzcode;
+	//let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
+	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
+	req.session.qnNumberArr=new Array(questions.length);
+	req.session.qnNumber=1;
+	qnNumberArr = req.session.qnNumberArr;
+	for(let i = 0;i<questions.length;i++)
+	{
+		qnNumberArr[i] = questions[i].qnid;
+	}
+	let question = await db.one('SELECT * FROM question WHERE quizid=$1 AND qnid=$2',[qzcode,qnNumberArr[0]]);
+	console.log(qnNumberArr);
+	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
+	//res.send("Successfully attempted");
+
+})
+router.post('/gotoQn',async(req,res) => {
+	res.send("Successfully attempted");
+
+})
+//router.post('/attempt')
 
 module.exports = router;

@@ -1,198 +1,192 @@
 <html>
-
 <head>
-	<script>
-		function toggleRightPanel() {
-			if (document.getElementById("right_panel").style.display == "inline") {
-				document.getElementById("right_panel").style.display = "none";
-				document.getElementById("questions_panel").style.display = "grid";
-				document.getElementById("question_area").style.width = "100%";
-			}
-			else {
-				document.getElementById("right_panel").style.display = "inline";
-				document.getElementById("questions_panel").style.display = "grid";
-				document.getElementById("question_area").style.width = "79.25%";
-			}
-		}
-		function hideRightPanel() {
-			document.getElementById("right_panel").style.display = "none";
-			document.getElementById("question_area").style.width = "100%";
-		}
-	</script>
-	<style>
-		body {
-			margin: 0px;
-		}
-
-		#right_panel {
-			display: none;
-			border-left: 2px solid black;
-			border-bottom: 2px solid black;
-			background-color: white;
-			width: 20.4%;
-			//align-content:center;
-			float: right;
-			height: 80%;
-			z-index: 2;
-		}
-
-		#questions_panel {
-			!display: none;
-			grid-template-columns: auto auto auto;
-			column-gap: 10%;
-			row-gap: 5%;
-			//background-color:white;
-			//align-content:center;
-			//height:30%;
-			z-index: 3;
-			//border-bottom:2px solid black;
-			margin-top: 8px;
-			padding: 5px;
-		}
-
-		.qn_button {
-			background-color: #e9e9e9;
-			//flex: 0 1 21%;
-			border: 1px solid grey;
-			padding: 15px;
-			margin: 4px;
-			border-radius: 10px 0px 0px 0px;
-			text-align: center;
-			height: 85%;
-			width: 85%;
-			cursor: pointer;
-			box-shadow: 5px 5px 5px lightgrey;
-		}
-
-		.qn_button:hover {
-			//transition-duration:0.05s;
-			font-size: 17px;
-			margin: 0px;
-			//background-color:#f1f1e7;
-			box-shadow: 7px 7px 5px lightgrey;
-		}
-
-		#navbar {
-			display: flex;
-			flex-direction: row-reverse;
-			//position: sticky;
-			background-color: #d6d6ef;
-			border-bottom: 1px solid black;
-			background-color: #dccae0;
-			//border-top:0px;
-			//top: 0;
-			height: clamp(55px, 10vh, 55px);
-
-		}
-
-		.navbar_items {
-			margin: 10px;
-			border-radius: 25px;
-			border: 1px solid #3333cc;
-			color: #3333cc;
-			cursor: pointer;
-		}
-
-		.navbar_items:hover {
-			background-color: #3333cc;
-			font-size: 16px;
-			color: white;
-		}
-
-		#app_header {
-			background-color: #d6d6f5;
-			color: #3333cc;
-			height: clamp(45px, 9vh, 55px);
-			text-transform: uppercase;
-			font-size: 20px;
-			letter-spacing: 2px;
-			text-align: center;
-			padding-top: 15px;
-			//padding-bottom:20px;
-			font-family: sans-serif;
-			//border-bottom: 1px solid black;
-		}
-
-		#details {
-			background: rgba(175, 50, 80, 0.2);
-			color: black;
-			height: clamp(35px, 8vh, 35px);
-			font-size: 17px;
-			padding-top: 15px;
-			padding-left: 3%;
-			margin: 0px;
-			font-family: sans-serif;
-		}
-
-		#question_area {
-			//background-color:#ffffed;
-			height: 75%;
-			width: 100%;
-			float: left;
-			//padding:10px;
-			border-bottom: 2px solid black;
-			z-index: 1;
-		}
-
-		#question_type_area {
-			padding: 10px;
-			border-bottom: 1px solid black;
-		}
-
-		#question_description {
-			padding: 20px;
-			height: 70%;
-		}
-
-		#time_panel {
-			text-align: center;
-			border-bottom: 2px solid black;
-			//border: 2px solid black;
-		}
-
-		#action_area {
-			padding: 10px;
-			display: flex;
-			border-top: 2px solid black;
-			float: down;
-			//justify-content:left;
-			gap: 10px;
-			z-index: 1;
-			//width:77.85%;
-			//position:static;
-		}
-
-		#action_items {}
-
-		#main_area {
-			//margin:0px;
-			//display:flex;
-		}
-	</style>
-</head>
-
-<body>
-	<div id="app_header">
-		Pariksha-NITC
-	</div>
-	<div id="details">
-		Home page
-	</div>
-	<nav id="navbar">
-		<button class="navbar_items" onclick="toggleRightPanel();">Qns Panel</button>
-		<button class="navbar_items" onclick="alert('Instructions');">Instructions</button>
-	</nav>
-
-	<!-- <div id = "right_panel"> -->
-	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->
-	<div id="main area">
-
-		<!--div id = "question_area">
-	<!--div id="question_type_area">Question type: MCQ</div-->
-		<!--div id="question_description">
-		Question 1
-	</div>	
+<script>
+function toggleRightPanel()
+{
+	if(document.getElementById("right_panel").style.display=="inline")
+	{
+		document.getElementById("right_panel").style.display="none";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("question_area").style.width="100%";
+	}
+	else
+	{
+		document.getElementById("right_panel").style.display="inline";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("question_area").style.width="79.25%";
+	}
+}
+function hideRightPanel()
+{
+	document.getElementById("right_panel").style.display="none";
+	document.getElementById("question_area").style.width="100%";
+}
+</script>
+<style>
+body{
+	margin: 0px;
+}
+#right_panel{
+	display: none;
+	border-left:2px solid black;
+	border-bottom:2px solid black;
+	background-color:white;
+	width:20.4%;
+	//align-content:center;
+	float:right;
+	height:80%;
+	z-index: 2;
+}
+#questions_panel{
+	!display: none;
+	grid-template-columns: auto auto auto;
+	column-gap:10%;
+	row-gap:5%;
+	//background-color:white;
+	//align-content:center;
+	//height:30%;
+	z-index: 3;
+	//border-bottom:2px solid black;
+	margin-top:8px;
+	padding:5px;
+}
+.qn_button{
+background-color:#e9e9e9;
+//flex: 0 1 21%;
+	border : 1px solid grey;
+	padding:15px;
+	margin:4px;
+	border-radius:10px 0px 0px 0px;
+	text-align:center;
+	height:85%;
+	width:85%;
+	cursor:pointer;
+	box-shadow : 5px 5px 5px lightgrey;
+}
+.qn_button:hover{
+//transition-duration:0.05s;
+	font-size:17px;
+	margin:0px;
+	//background-color:#f1f1e7;
+	box-shadow : 7px 7px 5px lightgrey;
+}
+#navbar{
+	display: flex;
+	flex-direction:row-reverse;
+	//position: sticky;
+    background-color: #d6d6ef;
+	border-bottom:1px solid black;
+    background-color:#dccae0;
+	//border-top:0px;
+    //top: 0;
+    height: clamp(55px, 10vh, 55px);
+    
+}
+.navbar_items{
+	margin:10px;
+	border-radius:25px;
+	border: 1px solid #3333cc;
+	color:#3333cc;
+	cursor:pointer;
+}
+.navbar_items:hover{
+	background-color: #3333cc;
+	font-size:16px;
+	color:white;
+}
+#app_header{
+	background-color:#d6d6f5;
+	color:#3333cc;
+	height: clamp(45px, 9vh, 55px);
+	text-transform:uppercase;
+	font-size:20px;
+	letter-spacing:2px;
+	text-align:center;
+	padding-top:15px;
+	//padding-bottom:20px;
+	font-family:sans-serif;
+	//border-bottom: 1px solid black;
+}
+#details{
+	background: rgba(175, 50, 80, 0.2);
+	color:black;
+	height: clamp(35px, 8vh, 35px);
+	font-size:17px;
+	padding-top:15px;
+	padding-left:3%;
+	margin:0px;
+	font-family:sans-serif;
+}
+#question_area{
+	//background-color:#ffffed;
+	height:75%;
+	width:100%;
+	float:left;
+	//padding:10px;
+	border-bottom: 2px solid black;
+	z-index:1;
+}
+#question_type_area{
+	padding:10px;
+	border-bottom: 1px solid black;
+}
+#question_description{
+	padding:20px;
+	height:70%;
+}
+#time_panel{
+	text-align:center;
+	border-bottom:2px solid black;
+	//border: 2px solid black;
+}
+#action_area{
+	padding:10px;
+	display:flex;
+	border-top: 2px solid black;
+	float:down;
+	//justify-content:left;
+	gap :10px;
+	z-index:1;
+	//width:77.85%;
+	//position:static;
+}
+#action_items{
 	
+}
+#main_area{
+	//margin:0px;
+	//display:flex;
+}
+</style>
+</head>
+<body>
+<div id="app_header">
+	Pariksha-NITC
+</div>
+<div id="details">
+	Quiz 1
+</div>
+<nav id="navbar">
+	<button class="navbar_items" onclick="toggleRightPanel();" >Qns Panel</button>
+	<button class="navbar_items" onclick="alert('Instructions');" >Instructions</button>
+</nav>
+
+<!-- <div id = "right_panel"> -->
+	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->
+<div id ="main area">
+	<div id = "question_area">
+	<div id="question_type_area">Question type: {{question.type}}</div>
+	<div id="question_description">
+		Question {{currentQnNumber}}<br>
+		{{question.question}}
+	</div>	
+	<div id="action_area">
+			<button class = "action_items" >Previous</button>
+			<button class = "action_items" >Save and Next</button>
+			<button class = "action_items" >Mark for Review and Next</button>
+			<button class = "action_items" >Clear response</button>
+	</div>
+	</div>
 	
 	<div id="right_panel">
 		<div id = "time_panel">
@@ -201,12 +195,34 @@
 			00:00:00
 		</div>
 		<br><br>
-	
+		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
+		<div id="questions_panel">
+			{{#each questions}}
+				<form action="/student/gotoQn/:" method="get" onsubmit="appendQnNo(this)">
+				<button class="qn_button" > {{@index}} </button>
+				</form>
+			{{/each}}
+		</div>
 		
-	</div-->
-
 	</div>
-	<!-- </div> -->
+	
+</div>
+<script>
+	function appendQnNo(node)
+	{
+		let cn = node.childNode;
+		let qnum = cn.innerHTML;
+		let action = node.getAttribute('action')
+		//node.setAttribute('class',"");
+		//cn.innerHTML="7"
+		//node.innerHTML="7";
+		//node.parentNode.setAttribute('action',action + parseInt(qnum));
+		let newA = action + qnum;
+		node.setAttribute('action',newA);
+		//node.submit();
+		//<form action="/student/gotoQn/:" method="get" > </form>
+	}
+</script>
+<!-- </div> -->
 </body>
-
 </html>
