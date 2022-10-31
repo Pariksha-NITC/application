@@ -210,14 +210,19 @@ background-color:#e9e9e9;
 <script>
 	function appendQnNo(node)
 	{
-		let cn = node.childNode;
+		
+		let cn = node.firstChild;
+		//alert(node.getAttribute('action'));
 		let qnum = cn.innerHTML;
-		let action = node.getAttribute('action')
+		let action = node.getAttribute('action');
+		
 		//node.setAttribute('class',"");
 		//cn.innerHTML="7"
 		//node.innerHTML="7";
 		//node.parentNode.setAttribute('action',action + parseInt(qnum));
-		let newA = action + qnum;
+		var newA = (action + qnum);
+		alert(node.firstChild.innerHTML);
+		//console.log(newA);
 		node.setAttribute('action',newA);
 		//node.submit();
 		//<form action="/student/gotoQn/:" method="get" > </form>

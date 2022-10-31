@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS userDetails (
 
 CREATE TABLE IF NOT EXISTS quiz (
     QuizId VARCHAR PRIMARY KEY UNIQUE,
+    QuizName VARCHAR,
     Duration NUMERIC,
     TotalMarks NUMERIC,
     Passkey VARCHAR,
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS question (
     CorrectAnswer VARCHAR,
     Marks NUMERIC,
     Penalty NUMERIC,
+    Question VARCHAR,
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
             REFERENCES quiz(QuizId)

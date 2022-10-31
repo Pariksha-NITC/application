@@ -21,7 +21,7 @@ router.get('/', studentProtected, async(req,res) => {
 
 router.post('/addQuiz', studentProtected, async(req,res) => {
 	try {
-		let quizzes = await db.one('SELECT * FROM quiz WHERE quizid=$1',[req.body.qzcode]);
+		let quizzes = await db.any('SELECT * FROM quiz WHERE quizid=$1',[req.body.qzcode]);
 		//let logMessage = 'User trying to add quiz';
 		//let quizzes = await executeQuery(query,logMessage)
 		if(quizzes && quizzes[0].passkey === req.body.qzpwd)
