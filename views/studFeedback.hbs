@@ -7,13 +7,19 @@ function toggleRightPanel()
 	{
 		document.getElementById("right_panel").style.display="none";
 		document.getElementById("questions_panel").style.display="grid";
-		document.getElementById("question_area").style.width="100%";
+		document.getElementById("main_area").style.width="100%";
+		//document.getElementById("response_panel").style.width="100%";
+		//document.getElementById("response_panel").style.height="17%";
 	}
 	else
 	{
 		document.getElementById("right_panel").style.display="inline";
 		document.getElementById("questions_panel").style.display="grid";
-		document.getElementById("question_area").style.width="79.25%";
+		document.getElementById("main_area").style.width="79.25%";
+		//document.getElementById("response_panel").style.width="20%";
+		//document.getElementById("response_panel").style.margin_top="5%";
+		
+		
 	}
 }
 function hideRightPanel()
@@ -22,26 +28,27 @@ function hideRightPanel()
 	document.getElementById("question_area").style.width="100%";
 }
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 body{
 	margin: 0px;
 }
 #right_panel{
-	display: none;
+	display: inline;
 	border-left:2px solid black;
 	border-bottom:2px solid black;
 	background-color:white;
 	width:20.4%;
 	//align-content:center;
 	float:right;
-	height:80%;
+	height:74%;
 	z-index: 2;
 }
 #questions_panel{
-	!display: none;
+	display: grid;
 	grid-template-columns: auto auto auto;
-	column-gap:10%;
-	row-gap:5%;
+	column-gap:8%;
+	row-gap:2%;
 	//background-color:white;
 	//align-content:center;
 	//height:30%;
@@ -49,6 +56,8 @@ body{
 	//border-bottom:2px solid black;
 	margin-top:8px;
 	padding:5px;
+	padding-bottom:10%;
+	overflow:auto;
 }
 .qn_button{
 background-color:#e9e9e9;
@@ -117,22 +126,34 @@ background-color:#e9e9e9;
 	margin:0px;
 	font-family:sans-serif;
 }
-#question_area{
+#main_area{
 	//background-color:#ffffed;
 	height:75%;
-	width:100%;
+	width:79.25%;
 	float:left;
+	//margin-bottom:5%;
 	//padding:10px;
-	border-bottom: 2px solid black;
+	//border-bottom: 5px solid black;
 	z-index:1;
+	
 }
 #question_type_area{
 	padding:10px;
 	border-bottom: 1px solid black;
+	
 }
 #question_description{
-	padding:20px;
-	height:70%;
+	padding:1%;
+	word-wrap:break-word;
+	//padding-right:25%
+	height:35%;
+	width:78%;
+	//border:2px solid black;
+	float:left;
+	height:48%;
+	//margin:15%;
+	//margin-top:50%;
+	overflow:auto;
 }
 #time_panel{
 	text-align:center;
@@ -142,6 +163,7 @@ background-color:#e9e9e9;
 #action_area{
 	padding:10px;
 	display:flex;
+	//margin-top:1%;
 	border-top: 2px solid black;
 	float:down;
 	//justify-content:left;
@@ -149,13 +171,31 @@ background-color:#e9e9e9;
 	z-index:1;
 	//width:77.85%;
 	//position:static;
+	border-bottom: 2px solid black;
 }
 #action_items{
 	
 }
-#main_area{
-	//margin:0px;
-	//display:flex;
+#response_panel
+{
+	clear:both;
+	//margin-top:21.5%;
+	margin-bottom:0%;
+	padding:0.5%;
+	background-color:#dccae0;
+	height:28%;
+	z-index:1;
+	width:99%;
+}
+#Evaluated_results{
+	padding:1%;
+	float:right;
+	text-align:center;
+	height:41%;
+	z-index:2;
+	width:18%;
+	margin-top:1.2%;
+	background-color:rgba(0,120,120,0.1);
 }
 </style>
 </head>
@@ -173,21 +213,47 @@ background-color:#e9e9e9;
 
 <!-- <div id = "right_panel"> -->
 	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->
-<div id ="main area">
-	<div id = "question_area">
-	<div id="question_type_area">Question type: {{question.type}}</div>
-	<div id="question_description">
-		Question {{currentQnNumber}}<br>
-		{{question.question}}
-	</div>	
-	<div id="action_area">
+<div id ="main_area">
+		<div id="question_type_area">Question type: {{question.type}}</div>
+		<!--div style="border-bottom:12 px solid black;"-->
+		<div id="question_description" style="background-color: rgba(175, 0, 0, 0.3);border:10 px solid black;background-color:white;">Question {{currentQnNumber}}<br><br>
+			<!--{{question.question}}
+			<form id="question_form" action="post" method="/student/submitQn/:{{question.type}}" >
+			{{#ife question.type 'mcq'}}
+				
+			{{/ife}}
+			{{#ife question.type 'msq'}}
+				
+			{{/ife}}-->
+			
+			</form>
+		</div>
+		<div id="Evaluated_results">
+		<br><br><br><br>
+			<div style="//background-color:white;">Marks {{question.marks}}</div><br>
+			<!--Bookmark qn &nbsp; <i class="fa fa-bookmark" id="edit" style="cursor:pointer;color:grey;"></i>-->
+		</div>
+		<!--/div-->
+		
+			<div id="response_panel">
+					{{#ife question.type 'subjective'}}
+					<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your response</div>
+					{{else}}
+					<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your comments</div>
+					{{/ife}}
+					<textarea rows="7" cols="135" style="margin-bottom:5%;padding:0.5%;background-color:white;">Answer is 10.</textarea>
+			
+			</div>
+		
+		<div id="action_area">
 			<button class = "action_items" >Previous</button>
 			<button class = "action_items" >Save and Next</button>
 			<button class = "action_items" >Mark for Review and Next</button>
 			<button class = "action_items" >Clear response</button>
 	</div>
-	</div>
-	
+		
+</div>
+
 	<div id="right_panel">
 		<div id = "time_panel">
 			<div style="background-color:c6e2ff;border-bottom:1px solid black;">Time left</div>
@@ -198,9 +264,7 @@ background-color:#e9e9e9;
 		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
 		<div id="questions_panel">
 			{{#each questions}}
-				<form action="/student/gotoQn/:" method="get" onsubmit="appendQnNo(this)">
-				<button class="qn_button" > {{@index}} </button>
-				</form>
+				<form action="/student/gotoQn" method="post" ><input type="hidden" name="qnum" value="{{@index}}"><button class="qn_button" >{{@index}}</button></form>
 			{{/each}}
 		</div>
 		
@@ -210,22 +274,14 @@ background-color:#e9e9e9;
 <script>
 	function appendQnNo(node)
 	{
-		
+		//onsubmit="appendQnNo(this)"
 		let cn = node.firstChild;
-		//alert(node.getAttribute('action'));
 		let qnum = cn.innerHTML;
 		let action = node.getAttribute('action');
+		let qnlink = (action + qnum);
+		node.setAttribute('action',qnlink);
+		node.submit();
 		
-		//node.setAttribute('class',"");
-		//cn.innerHTML="7"
-		//node.innerHTML="7";
-		//node.parentNode.setAttribute('action',action + parseInt(qnum));
-		var newA = (action + qnum);
-		alert(node.firstChild.innerHTML);
-		//console.log(newA);
-		node.setAttribute('action',newA);
-		//node.submit();
-		//<form action="/student/gotoQn/:" method="get" > </form>
 	}
 </script>
 <!-- </div> -->

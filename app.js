@@ -54,6 +54,13 @@ app.use(
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+let handlebars = require('express-handlebars');
+handlebars = handlebars.create({
+    helpers: require('./handlebar'),
+    defaultLayout : 'main',
+    extname : '.hbs'
+});
+app.engine('.hbs',handlebars.engine)
 
 // CORS
 const cors = require("cors");

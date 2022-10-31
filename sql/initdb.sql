@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     TotalMarks NUMERIC,
     Passkey VARCHAR,
     TeacherId VARCHAR,
+    Instructions VARCHAR[];
     CONSTRAINT fk_userDetails
         FOREIGN KEY(TeacherId) 
             REFERENCES userDetails(UserId)
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS quiz (
 );
 
 CREATE TABLE IF NOT EXISTS question (
-    QnId VARCHAR PRIMARY KEY UNIQUE,
+    QnId SERIAL PRIMARY KEY UNIQUE,
     QuizId VARCHAR,
     Duration NUMERIC,
     Difficulty VARCHAR,
@@ -47,6 +48,7 @@ CREATE TABLE IF NOT EXISTS question (
     CorrectAnswer VARCHAR,
     Marks NUMERIC,
     Penalty NUMERIC,
+    Options VARCHAR[];
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
             REFERENCES quiz(QuizId)

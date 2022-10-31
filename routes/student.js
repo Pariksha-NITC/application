@@ -57,6 +57,7 @@ router.post('/initiateAttempt',async(req,res) => {
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=1;
+	//req.session.qzcode = qzcode;
 	qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
 	{
@@ -64,13 +65,22 @@ router.post('/initiateAttempt',async(req,res) => {
 	}
 	let question = await db.one('SELECT * FROM question WHERE quizid=$1 AND qnid=$2',[qzcode,qnNumberArr[0]]);
 	console.log(qnNumberArr);
-	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
+	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
 	//res.send("Successfully attempted");
 
 })
 router.post('/gotoQn',async(req,res) => {
-	res.send("Successfully attempted");
-
+	
+	let qnum = parseInt(req.body.qnum);
+	qnNumberArr = req.session.qnNumberArr;
+	//res.send("Successfully attempted");
+	req.session.qnNumber=qnum;
+	console.log(qnNumberArr);
+	//res.send("Successfully reached");
+	let question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
+	console.log(question.options);
+	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[question.quizid]);
+	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
 })
 //router.post('/attempt')
 
