@@ -34,8 +34,11 @@ router.post('/login',async(req,res) => {
 	 		console.log(req.session);
 	 		console.log('Log in successful');
 			await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
+			console.log(userRole.role);
 			if(userRole.role === 'student')
 				res.redirect(303,'/student')
+			else if(userRole.role === 'toBeVerified')
+				res.redirect(303,'/teacher')
 		 	else
 		 		res.send('Successful');
 	 	}

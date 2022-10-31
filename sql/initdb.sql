@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS question (
     CorrectAnswer VARCHAR,
     Marks NUMERIC,
     Penalty NUMERIC,
-    Question VARCHAR,
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
             REFERENCES quiz(QuizId)

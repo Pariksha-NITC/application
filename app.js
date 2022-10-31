@@ -25,6 +25,7 @@ var usersRouter = require('./routes/users');
 const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const studentRouter = require('./routes/student');
+const teacherRouter = require('./routes/teacher');
 
 var app = express();
 
@@ -56,7 +57,7 @@ app.set('view engine', 'hbs');
 
 // CORS
 const cors = require("cors");
-const { nextTick } = require('process');
+const { nextTick, ppid } = require('process');
 var corsOptions = {
   origin: "http://localhost:3000"
 };
@@ -75,6 +76,7 @@ app.use('/',loginRouter);
 app.use('/users', usersRouter);
 app.use('/register',registerRouter);
 app.use('/student',studentRouter);
+app.use('/teacher',teacherRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
