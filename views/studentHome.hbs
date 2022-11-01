@@ -1,6 +1,7 @@
 <html>
 
 <head>
+	<link rel="stylesheet" href="./stylesheets/style.css">
 	<script>
 		function toggleRightPanel() {
 			if (document.getElementById("right_panel").style.display == "inline") {
@@ -182,12 +183,34 @@
 </head>
 
 <body>
-	<div id="app_header">
+	{{!-- <div id="app_header">
 		Pariksha-NITC
-	</div>
+	</div> --}}
+	
+
+
+	{{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+	{{!-- Page Name --}}
 	<div id="details">
 		Home page
 	</div>
+
+
 	<nav id="navbar">
 		<button class="navbar_items" onclick="toggleRightPanel();">Qns Panel</button>
 		<button class="navbar_items" onclick="alert('Instructions');">Instructions</button>

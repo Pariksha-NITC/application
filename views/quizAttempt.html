@@ -1,5 +1,6 @@
 <html>
 <head>
+	
 <script>
 function toggleRightPanel()
 {
@@ -32,27 +33,27 @@ body{
 	border-bottom:2px solid black;
 	background-color:white;
 	width:20.4%;
-	//align-content:center;
+	/* //align-content:center; */
 	float:right;
 	height:80%;
 	z-index: 2;
 }
 #questions_panel{
-	!display: none;
+	display: none;
 	grid-template-columns: auto auto auto;
 	column-gap:10%;
 	row-gap:5%;
-	//background-color:white;
-	//align-content:center;
-	//height:30%;
+	/* //background-color:white; */
+	/* //align-content:center; */
+	/* //height:30%; */
 	z-index: 3;
-	//border-bottom:2px solid black;
+	/* //border-bottom:2px solid black; */
 	margin-top:8px;
 	padding:5px;
 }
 .qn_button{
 background-color:#e9e9e9;
-//flex: 0 1 21%;
+/* //flex: 0 1 21%; */
 	border : 1px solid grey;
 	padding:15px;
 	margin:4px;
@@ -64,21 +65,21 @@ background-color:#e9e9e9;
 	box-shadow : 5px 5px 5px lightgrey;
 }
 .qn_button:hover{
-//transition-duration:0.05s;
+/* //transition-duration:0.05s; */
 	font-size:17px;
 	margin:0px;
-	//background-color:#f1f1e7;
+	/* //background-color:#f1f1e7; */
 	box-shadow : 7px 7px 5px lightgrey;
 }
 #navbar{
 	display: flex;
 	flex-direction:row-reverse;
-	//position: sticky;
+	/* //position: sticky; */
     background-color: #d6d6ef;
 	border-bottom:1px solid black;
     background-color:#dccae0;
-	//border-top:0px;
-    //top: 0;
+	/* //border-top:0px; */
+    /* //top: 0; */
     height: clamp(55px, 10vh, 55px);
     
 }
@@ -103,9 +104,9 @@ background-color:#e9e9e9;
 	letter-spacing:2px;
 	text-align:center;
 	padding-top:15px;
-	//padding-bottom:20px;
+	/* //padding-bottom:20px; */
 	font-family:sans-serif;
-	//border-bottom: 1px solid black;
+	/* //border-bottom: 1px solid black; */
 }
 #details{
 	background: rgba(175, 50, 80, 0.2);
@@ -118,11 +119,11 @@ background-color:#e9e9e9;
 	font-family:sans-serif;
 }
 #question_area{
-	//background-color:#ffffed;
+	/* //background-color:#ffffed; */
 	height:75%;
 	width:100%;
 	float:left;
-	//padding:10px;
+	/* //padding:10px; */
 	border-bottom: 2px solid black;
 	z-index:1;
 }
@@ -137,26 +138,23 @@ background-color:#e9e9e9;
 #time_panel{
 	text-align:center;
 	border-bottom:2px solid black;
-	//border: 2px solid black;
+	/* //border: 2px solid black; */
 }
 #action_area{
 	padding:10px;
 	display:flex;
 	border-top: 2px solid black;
 	float:down;
-	//justify-content:left;
+	/* //justify-content:left; */
 	gap :10px;
 	z-index:1;
-	//width:77.85%;
-	//position:static;
+	/* //width:77.85%; */
+	/* //position:static; */
 }
-#action_items{
+/* #action_items{
 	
-}
-#main_area{
-	//margin:0px;
-	//display:flex;
-}
+} */
+
 </style>
 </head>
 <body>
@@ -166,10 +164,28 @@ background-color:#e9e9e9;
 <div id="details">
 	Quiz 1
 </div>
-<nav id="navbar">
+
+<nav class="nav-bar">
+	<div class="title">
+		<h3>Pariksha-NITC</h3>
+	</div>
+	<div class="nav-links-container">
+		<a href="index.html" class="nav-link">Home</a>
+		<a href="resources.html" class="nav-link">Resources</a>
+		<a href="members.html" class="nav-link">Members</a>
+		<a href="contact.html" class="nav-link">Contact</a>
+	</div>
+	<div class="burger">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+</nav>
+
+<!-- <nav id="navbar">
 	<button class="navbar_items" onclick="toggleRightPanel();" >Qns Panel</button>
 	<button class="navbar_items" onclick="alert('Instructions');" >Instructions</button>
-</nav>
+</nav> -->
 
 <!-- <div id = "right_panel"> -->
 	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->

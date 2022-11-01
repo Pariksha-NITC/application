@@ -1,6 +1,7 @@
 <html>
 
 <head>
+	<link rel="stylesheet" href="./stylesheets/style.css">
 	<style>
 		body {
 			margin: 0px;
@@ -62,9 +63,24 @@
 </head>
 
 <body>
-	<div id="app_header">
+	{{!-- <div id="app_header">
 		Pariksha-NITC
-	</div>
+	</div> --}}
+	{{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
 	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
 		Quiz Details</div>
 	<div id="form">
