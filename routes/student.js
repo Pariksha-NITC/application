@@ -69,19 +69,19 @@ router.post('/initiateAttempt',async(req,res) => {
 	//res.send("Successfully attempted");
 
 })
-router.post('/gotoQn',async(req,res) => {
-	
-	let qnum = parseInt(req.body.qnum);
+router.post('/saveAndNavigate',async(req,res) => {
+	console.log(req.body);
+	let qnum = parseInt(req.body.toQnum);
 	qnNumberArr = req.session.qnNumberArr;
 	//res.send("Successfully attempted");
 	req.session.qnNumber=qnum;
-	console.log(qnNumberArr);
+	//console.log(qnNumberArr);
 	//res.send("Successfully reached");
 	let question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
 	console.log(question.options);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[question.quizid]);
 	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
-})
-//router.post('/attempt')
+});
+
 
 module.exports = router;
