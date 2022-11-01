@@ -1,0 +1,97 @@
+<html>
+
+<head>
+	<style>
+		body {
+			margin: 0px;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 15px;
+			//padding-bottom:20px;
+			font-family: sans-serif;
+			border-bottom: 1px solid black;
+		}
+
+		#form {
+			background-color: #dccae0;
+			width: 32%;
+			height: 27%;
+			padding: 2%;
+			padding-left: 7%;
+			padding-top: 5%;
+			margin-left: 30%;
+			margin-top: 1%;
+			//align-items:center;
+		}
+
+		.row {
+			//display:table;
+			//background-color:red;
+			//border:2px solid black;
+			//margin:12px;
+			//padding:7px;
+			//border-bottom:1px solid black;
+		}
+
+		.label {
+			float: left;
+			width: 40%;
+			//background-color:cyan;
+			border-right: 1px solid black;
+		}
+
+		.input {
+			float: right;
+			width: 50%;
+		}
+
+		input {
+			border-radius: 3px;
+			border-color: #dccae0;
+			z-index: 40;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app_header">
+		Pariksha-NITC
+	</div>
+	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
+		Quiz Details</div>
+	<div id="form">
+		<form action="/register" method="post">
+			<div class="row">
+				<div class="label">Quiz Title</div>
+				<div class="input"><input type="text" name="qtitle" placeholder="Enter Quiz Name ..."></div>
+			</div>
+			<div class="row">
+				<div class="label">Duration</div>
+				<div class="input"><input type="text" name="duration" placeholder="Enter Duration ..."></div>
+			</div>
+			<div class="row">
+				<div class="label">Maximum Marks</div>
+				<div class="input"><input type="text" name="marks" placeholder="Enter Maximum marks ..."></div>
+			</div>
+			<div class="row">
+				<div class="label">Passkey</div>
+				<div class="input"><input type="text" maxlength="6" placeholder="Enter Passkey ..."></div>
+			</div>
+			<div class="row">
+				<div class="label">Instructions</div>
+				<textarea name="instructions" rows="2" cols="46" placeholder="Enter Instructions ..." style="padding:2%"></textarea>
+			</div>
+			<div style="padding-left:35%;padding-top:0%;">
+				<input type="submit" value="Submit" style="border-radius:20px;cursor:pointer;padding:2%">
+			</div>
+		</form>
+	</div>
+</body>

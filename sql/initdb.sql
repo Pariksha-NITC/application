@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS userDetails (
 );
 
 CREATE TABLE IF NOT EXISTS quiz (
-    QuizId VARCHAR PRIMARY KEY UNIQUE,
+    QuizId SERIAL PRIMARY KEY UNIQUE,
     QuizName VARCHAR,
     Duration NUMERIC,
     TotalMarks NUMERIC,
     Passkey VARCHAR,
     TeacherId VARCHAR,
-    Instructions VARCHAR[];
+    Instructions VARCHAR[],
     CONSTRAINT fk_userDetails
         FOREIGN KEY(TeacherId) 
             REFERENCES userDetails(UserId)
@@ -41,14 +41,14 @@ CREATE TABLE IF NOT EXISTS quiz (
 
 CREATE TABLE IF NOT EXISTS question (
     QnId SERIAL PRIMARY KEY UNIQUE,
-    QuizId VARCHAR,
+    QuizId SERIAL,
     Duration NUMERIC,
     Difficulty VARCHAR,
     Type VARCHAR,
     CorrectAnswer VARCHAR,
     Marks NUMERIC,
     Penalty NUMERIC,
-    Options VARCHAR[];
+    Options VARCHAR[],
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
             REFERENCES quiz(QuizId)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS question (
 
 CREATE TABLE IF NOT EXISTS response (
     ResponseId VARCHAR PRIMARY KEY,
-    QnId VARCHAR,
+    QnId SERIAL,
     StudentId VARCHAR,
     Response VARCHAR,
     MarksAwarded NUMERIC,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS response (
 
 CREATE TABLE IF NOT EXISTS studentQuiz (
     StudentId VARCHAR,
-    QuizId VARCHAR,
+    QuizId SERIAL,
     Status VARCHAR,
     CONSTRAINT fk_userDetails
         FOREIGN KEY(StudentId) 

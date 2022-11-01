@@ -18,4 +18,8 @@ router.get('/', teacherProtected, async(req,res) => {
 	res.send(msg);*/ 
 });
 
+router.post('/createQuiz', teacherProtected, async(req,res) => {
+	res.render('createQuiz');
+})
+
 module.exports = router
