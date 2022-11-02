@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <title>Quiz Home Page</title>
+    <style>
+        body {
+			margin: 0px;
+            font-family: sans-serif;
+            font-weight: bold;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 20px;
+			font-family: sans-serif;
+			border-bottom: 1px solid black;
+		}
+
+        #subject{
+            height: 50vh;
+            align-items: center;
+            background-color: #dccae0;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        #details{
+            height: 50vh;
+            display: flex;
+            justify-content: center;            
+            align-items: center;
+            background-color: #f5f553;
+            margin: auto;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+            flex-direction: column;
+        }
+
+        #lander{
+            height: 50vh;
+            display: flex;
+            justify-content: space-evenly;            
+            align-items: center;
+            background-color: #cae723;
+            margin: auto;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    {{!-- <div id="app_header">
+		Pariksha-NITC
+	</div> --}}
+    {{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <div id="subject" >
+        <div class="course">Course : Web Programming</div>
+        <div class="instructors">Instructors : {{quiz.instructor}}</div>
+        <div class="evaluators">Evaluators : Atheshwaran, Srijith, Ayush, Mineesh</div>
+    </div>
+    <div id="details">
+        <div class="title"> <h2>{{quiz.quizname}}</h2> </div>
+        <div class="instructions">
+            Please go through the following instructions carefully
+            <ol>
+                <li>In Quiz, the questions will be sequential and you are allowed to have only one attempt</li>
+                <li>Please keep a few white sheets & Pen with you before starting the quiz</li>
+                <li>There will be no marks awarded for the worked-out sheets </li>
+                <li>Test-2 marks for each part will be fully based on the questions that you attempted and submitted in the respective Quiz link </li>
+            </ol>
+        </div>
+    </div>
+    <div id="lander">
+        <div class="duration" style="padding:0.2%">Duration : {{quiz.duration}} minutes</div>
+        <div class="maxMarks" style="padding:0.2%">Maximum Marks : {{quiz.totalmarks}} </div>
+        <div class="maxMarks" style="padding:0.2%">Your Marks : {{quiz.totalmarks}} </div>
+        <div class="timer" id="timer" style="padding:0.2%"></div>
+        <!--div class="code" style="padding:0.2%">Quiz Code : <input type="password" name="pword" size="15" maxlength="6"></div-->
+        <form action="/student/initiateAttempt" method="post">
+            <input type="hidden" name="qzcode" value={{quiz.quizid}}>
+            <div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Review Quiz" disabled></div>
+            <div id="link"></div>
+        </form>
+    </div>
+    <!--script>
+        var countDownDate = new Date("Oct 6, 2022 09:08:30").getTime();
+        var x=setInterval(function (){
+            var currentDate=new Date().getTime();
+            var differnce=countDownDate-currentDate;
+            var days=Math.floor(differnce / (1000 * 60 * 60 * 24));
+            var hours=Math.floor((differnce % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes=Math.floor((differnce % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds=Math.floor((differnce % (1000 * 60)) / (1000));
+            var time="";
+            if(days>0){
+                time+= days + " days " ;
+            }
+            time+=hours + " hours " + minutes + " minutes " + seconds + " seconds " ;
+            document.getElementById("timer").innerHTML=time ;
+            if(differnce<=0){
+                document.getElementById("timer").innerHTML="" ;
+                var html='<div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Attempt Quiz"></div>';
+                document.getElementById("link").innerHTML=html;
+            }
+        });
+    </script-->
+</body>
+</html>

@@ -45,14 +45,21 @@ router.post('/addQuiz', studentProtected, async(req,res) => {
 
 router.post('/viewQuiz', studentProtected, async(req,res) =>{
 	let quizid = req.body.qzcode;
+	let response = await db.one('SELECT status FROM studentquiz WHERE quizid=$1 AND studentid=$2',[req.body.qzcode,req.session.userID]);
+	
 	const quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
 	quizDetails.instructor = instructor.name;
 	//console.log(quizDetails)
-	res.render('qhmp',{quiz:quizDetails})
+	if(response.status == 'attempted')
+		res.render('reviewHome',{quiz:quizDetails});
+	else
+		res.render('qhmp',{quiz:quizDetails})
 })
 router.post('/initiateAttempt',async(req,res) => {
 	let qzcode = req.body.qzcode;
+	req.session.qzcode = qzcode;
+	await db.none("UPDATE studentquiz SET status='attempting' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 	//let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
 	req.session.qnNumberArr=new Array(questions.length);
@@ -155,6 +162,45 @@ router.post('/saveAndNavigate',async(req,res) => {
 		/*console.log("no");*/
 	}
 	
+});
+router.post('/saveAndEnd',async(req,res) => {
+	console.log(req.body);
+	let qnNumberArr = req.session.qnNumberArr;
+	let qnum = req.session.qnNumber;
+	let question = req.session.question;
+	let responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+	if(responses.length != 0)
+	{
+		if(question.type == 'subjective')
+			await db.none('UPDATE response SET response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		else if(question.type == 'mcq')
+			await db.none('UPDATE response set options=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		else if(question.type == 'msq')
+			await db.none('UPDATE response set options=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	}
+	else
+	{
+		if(question.type == 'subjective')
+		{
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		}
+		else if(question.type == 'mcq')
+		{
+			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		}
+		else if(question.type == 'msq')
+		{
+			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+
+		}
+	}
+	await db.none("UPDATE studentquiz SET status='attempted' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
+	//res.send("Attempt has been recorded");
+	//res.redirect(303,'/student');
+	const quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[question.quizid]);
+	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
+	quizDetails.instructor = instructor.name;
+	res.render('reviewHome',{quiz:quizDetails});
 });
 
 
