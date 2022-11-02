@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     TotalMarks NUMERIC,
     Passkey VARCHAR,
     TeacherId VARCHAR,
-    Instructions VARCHAR[],
+    Instructions VARCHAR,
     CONSTRAINT fk_userDetails
         FOREIGN KEY(TeacherId) 
             REFERENCES userDetails(UserId)
