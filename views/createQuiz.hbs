@@ -22,8 +22,8 @@
 
 		#form {
 			background-color: #dccae0;
-			width: 32%;
-			height: 27%;
+			width: 41%;
+			height: 50%;
 			padding: 2%;
 			padding-left: 7%;
 			padding-top: 5%;
@@ -68,26 +68,26 @@
 	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
 		Quiz Details</div>
 	<div id="form">
-		<form action="/register" method="post">
-			<div class="row">
+		<form action="/teacher/createQuestions" method="post">
+			<div class="row" style="padding:4%">
 				<div class="label">Quiz Title</div>
 				<div class="input"><input type="text" name="qtitle" placeholder="Enter Quiz Name ..."></div>
 			</div>
-			<div class="row">
+			<div class="row" style="padding:4%">
 				<div class="label">Duration</div>
 				<div class="input"><input type="text" name="duration" placeholder="Enter Duration ..."></div>
 			</div>
-			<div class="row">
+			<div class="row" style="padding:4%">
 				<div class="label">Maximum Marks</div>
 				<div class="input"><input type="text" name="marks" placeholder="Enter Maximum marks ..."></div>
 			</div>
-			<div class="row">
+			<div class="row" style="padding:4%">
 				<div class="label">Passkey</div>
-				<div class="input"><input type="text" maxlength="6" placeholder="Enter Passkey ..."></div>
+				<div class="input"><input type="text" name="passkey" maxlength="6" placeholder="Enter Passkey ..."></div>
 			</div>
-			<div class="row">
-				<div class="label">Instructions</div>
-				<textarea name="instructions" rows="2" cols="46" placeholder="Enter Instructions ..." style="padding:2%"></textarea>
+			<div class="row" style="padding:4%">
+				<div>Instructions</div>
+				<textarea name="instructions" rows="2" cols="46" name="instructions" placeholder="Enter Instructions ..." style="padding:2%"></textarea>
 			</div>
 			<div style="padding-left:35%;padding-top:0%;">
 				<input type="submit" value="Submit" style="border-radius:20px;cursor:pointer;padding:2%">
