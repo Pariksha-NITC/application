@@ -57,15 +57,17 @@ router.post('/initiateAttempt',async(req,res) => {
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=0;
+	
 	//req.session.qzcode = qzcode;
-	qnNumberArr = req.session.qnNumberArr;
+	let qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
 	{
 		qnNumberArr[i] = questions[i].qnid;
 	}
 	let question = await db.one('SELECT * FROM question WHERE quizid=$1 AND qnid=$2',[qzcode,qnNumberArr[0]]);
+	req.session.question=question;
 	console.log(qnNumberArr);
-	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
+	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
 	//res.send("Successfully attempted");
 
 })
@@ -73,14 +75,50 @@ router.post('/saveAndNavigate',async(req,res) => {
 	console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
-	/*let responses = await db.any('SELECT responseid FROM response WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID]);
-	if(responses)
-	{
-		await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	let question = req.session.question;
+	//console.log(question.qnid);
+	//console.log(req.session.userID);
+	let responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+	/*if (req.session.userID)
+	{	
+		responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+		console.log(typeof responses)
 	}
 	else
-		await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
-	*/
+	{
+		console.log(timeout);
+		res.redirect(303,'/logout');
+	}	*/
+	if(responses.length != 0)
+	{
+		console.log(responses);
+		//console.log("yes");
+		if(question.type == 'subjective')
+			await db.none('UPDATE response SET response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		else if(question.type == 'mcq')
+			await db.none('UPDATE response set options=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		else if(question.type == 'msq')
+			await db.none('UPDATE response set options=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	}
+	else
+	{
+		if(question.type == 'subjective')
+		{
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		}
+		else if(question.type == 'mcq')
+		{
+			//console.log(typeof req.body.ans);
+			//console.log(req.body.ans);
+			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		}
+		else if(question.type == 'msq')
+		{
+			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+
+		}
+		/*console.log("no");*/
+	}
 	qnum = parseInt(req.body.toQnum);
 	if(qnum == -1)
 		qnum=0;
@@ -90,18 +128,33 @@ router.post('/saveAndNavigate',async(req,res) => {
 	req.session.qnNumber=qnum;
 	//console.log(qnNumberArr);
 	//res.send("Successfully reached");
-	let question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
-	console.log(question.options);
+	question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
+	req.session.question=question;
+	//console.log(question.options);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[question.quizid]);
-	//responses = await db.any('SELECT responseid FROM response WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID]);
-	/*if(responses)
+	responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+	if(responses.length != 0)
 	{
-		await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		console.log(responses[0]);
+		//console.log("yes");
+		let ans;
+		if(question.type == 'subjective')
+		{
+			ans = responses[0].response;			
+		}
+		else if(question.type == 'mcq')
+			ans = String((responses[0].options)[0]);
+		else if(question.type == 'msq')
+			ans = responses[0].options;
+		console.log(ans);
+		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:ans});
 	}
 	else
-		await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
-	*/
-	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
+	{
+		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:null});
+		/*console.log("no");*/
+	}
+	
 });
 
 
