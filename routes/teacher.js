@@ -28,9 +28,12 @@ router.post('/createQuestions', teacherProtected,async(req,res) => {
 	let marks = req.body.marks;
 	let passkey = req.body.passkey;
 	let instructions = req.body.instructions;
-	console.log('alertbvdhvhfd');
-	await db.none('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,userId) VALUES ($1,$2,$3,$4,$5)', [qtitle,duration,marks,passkey,{instructions}]);
-	res.send('hello');
+	await db.none('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,teacherid) VALUES ($1,$2,$3,$4,$5,$6)', [qtitle,duration,marks,passkey,instructions,req.session.userID]);
+	res.render('createQuestions',{qtitle:quizname},{duration:duration},{marks:totalmarks},{passkey:passkey},{instructions:instructions});
+})
+
+router.post('/createQuestions',teacherProtected, async(req,res) => {
+	
 })
 
 module.exports = router
