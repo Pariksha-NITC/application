@@ -28,12 +28,13 @@ router.post('/createQuestions', teacherProtected,async(req,res) => {
 	let marks = req.body.marks;
 	let passkey = req.body.passkey;
 	let instructions = req.body.instructions;
-	await db.none('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,teacherid) VALUES ($1,$2,$3,$4,$5,$6)', [qtitle,duration,marks,passkey,instructions,req.session.userID]);
-	res.render('createQuestions',{qtitle:quizname},{duration:duration},{marks:totalmarks},{passkey:passkey},{instructions:instructions});
+	let x=await db.any('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,teacherid) VALUES ($1,$2,$3,$4,$5,$6) RETURNING quizid', [qtitle,duration,marks,passkey,instructions,req.session.userID]);
+	console.log(x['quizid']);
+	res.render('createQuestions',{qid:x['quizid'],qtitle:qtitle,duration:duration,marks:marks,passkey:passkey,instructions:instructions});
 })
 
-router.post('/createQuestions',teacherProtected, async(req,res) => {
-	
+router.post('/makeQuestions', teacherProtected,async (req,res) => {
+	let x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	res.render('createQuestions',{qid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
 })
-
 module.exports = router

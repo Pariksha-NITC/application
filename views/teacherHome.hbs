@@ -203,22 +203,26 @@
             <div class="line3"></div>
         </div>
     </nav>
-	<!-- <div id = "right_panel"> -->
-	<!-- <button class="close_button" onclick="hideRightPanel();" style="display:none;" >Close </button> -->
 	<div id="addQn_area">
 		<form action="/teacher/createQuiz" method="post">
-			<input type="submit" value="createQuiz" style="cursor:pointer;justify-content:right;height:5vh; width:20vh;font-weight:bold;float: right;margin-right: 1%""></div>
+			<input type="submit" value="createQuiz" style="cursor:pointer;justify-content:right;height:5vh; width:20vh;font-weight:bold;float: right;margin-right: 1%">
 		</form>
 	</div>
 	<div id="QuizList">
-	<ul>
+	<table>
 	{{#each quizArray}}
-		<li>
-			<form action="/teacher/viewQuiz" method="post">
-			<input type="hidden" name="qzname" value={{quizid}}>
-			<a href="#" onclick="this.parentNode.submit()">{{ quizname }}</a>
-			</form>
-		</li>
+		<tr>
+			<td><b>{{quizname}}</b></td>
+			<td><form action="/teacher/makeQuestions" method="post" style="display:inline">
+				<input type="hidden" name="qzid" value="{{quizid}}">
+				<div class="submit" style="padding:4%;margin-left:0%">
+					<input type="Submit" value="Update">
+				</div>
+			</form></td>
+			<td><form action="/teacher/viewQuestions" method="post" style="display:inline">
+				<input type="submit" value="View">
+			</form></td>
+		</tr>
 	{{/each}}
 	</ul>
 	</div> 
