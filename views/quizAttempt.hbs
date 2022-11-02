@@ -221,12 +221,12 @@ background-color:#e9e9e9;
 			<form id="question_form" method="post" action="/student/saveAndNavigate">
 			{{#ife question.type 'mcq'}}
 				{{#each question.options}}
-					<p><input type="radio" name="ans" value="{{.}}">{{.}}</p>
+					<p><input type="radio" name="ans" value="{{@index}}" {{#if ../ans}}{{#ife @index ../ans}}checked="true"{{/ife}}{{/if}}>{{.}}</p>
 				{{/each}}
 			{{/ife}}
 			{{#ife question.type 'msq'}}
 				{{#each question.options}}
-					<p><input type="checkbox" name="ans" value="{{.}}">{{.}}</p>
+					<p><input type="checkbox" name="ans" value="{{@index}}" {{#if ../ans}}{{#in @index ../ans}}checked="true"{{/in}}{{/if}}>{{.}}</p>
 				{{/each}}
 			{{/ife}}
 			
@@ -240,11 +240,11 @@ background-color:#e9e9e9;
 		
 			<div id="response_panel">
 					{{#ife question.type 'subjective'}}
-					<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your response</div>
-					<textarea name="ans" rows="7" cols="135" style="margin-bottom:5%;padding:0.5%;background-color:white;"></textarea>
+						<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your response</div>
+						<textarea name="ans" rows="7" cols="135" style="margin-bottom:5%;padding:0.5%;background-color:white;">{{#if ans}}{{ans}}{{/if}}</textarea>
 					{{else}}
-					<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your comments</div>
-					<textarea name="comment" rows="7" cols="135" style="margin-bottom:5%;padding:0.5%;background-color:white;"></textarea>
+						<div style="margin-top:0.5%;0%;letter-spacing:1px;">Your comments</div>
+						<textarea name="comment" rows="7" cols="135" style="margin-bottom:5%;padding:0.5%;background-color:white;"></textarea>
 					{{/ife}}
 					
 			
