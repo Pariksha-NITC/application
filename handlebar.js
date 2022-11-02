@@ -9,5 +9,8 @@ module.exports = {
     },
     inc : function(options){
         return String(parseInt(options.fn(this))+1);
+    }, 
+    dec : function(options){
+        return String(parseInt(options.fn(this))-1);
     } 
 }

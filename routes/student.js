@@ -56,7 +56,7 @@ router.post('/initiateAttempt',async(req,res) => {
 	//let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
 	req.session.qnNumberArr=new Array(questions.length);
-	req.session.qnNumber=1;
+	req.session.qnNumber=0;
 	//req.session.qzcode = qzcode;
 	qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
@@ -71,8 +71,21 @@ router.post('/initiateAttempt',async(req,res) => {
 })
 router.post('/saveAndNavigate',async(req,res) => {
 	console.log(req.body);
-	let qnum = parseInt(req.body.toQnum);
-	qnNumberArr = req.session.qnNumberArr;
+	let qnNumberArr = req.session.qnNumberArr;
+	let qnum = req.session.qnNumber;
+	/*let responses = await db.any('SELECT responseid FROM response WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID]);
+	if(responses)
+	{
+		await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	}
+	else
+		await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	*/
+	qnum = parseInt(req.body.toQnum);
+	if(qnum == -1)
+		qnum=0;
+	qnum = qnum % qnNumberArr.length
+	 
 	//res.send("Successfully attempted");
 	req.session.qnNumber=qnum;
 	//console.log(qnNumberArr);
@@ -80,6 +93,14 @@ router.post('/saveAndNavigate',async(req,res) => {
 	let question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
 	console.log(question.options);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[question.quizid]);
+	//responses = await db.any('SELECT responseid FROM response WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID]);
+	/*if(responses)
+	{
+		await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	}
+	else
+		await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+	*/
 	res.render('studFeedback',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
 });
 
