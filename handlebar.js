@@ -6,5 +6,8 @@ module.exports = {
         return options.fn(this);
     else
         return options.inverse(this);
-    }
+    },
+    inc : function(options){
+        return String(parseInt(options.fn(this))+1);
+    } 
 }

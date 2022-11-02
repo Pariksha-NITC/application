@@ -216,16 +216,19 @@ background-color:#e9e9e9;
 <div id ="main_area">
 		<div id="question_type_area">Question type: {{question.type}}</div>
 		<!--div style="border-bottom:12 px solid black;"-->
-		<div id="question_description" style="background-color: rgba(175, 0, 0, 0.3);border:10 px solid black;background-color:white;">Question {{currentQnNumber}}<br><br>
-			<!--{{question.question}}
-			<form id="question_form" action="post" method="/student/submitQn/:{{question.type}}" >
+		<div id="question_description" style="background-color: rgba(175, 0, 0, 0.3);border:10 px solid black;background-color:white;">Question {{#inc}}{{currentQnNumber}}{{/inc}}<br><br>
+			{{question.question}}
+			<form id="question_form" method="post" action="/student/saveAndNavigate">
 			{{#ife question.type 'mcq'}}
-				
+				{{#each question.options}}
+					<p><input type="radio" name="ans" value="{{.}}">{{.}}</p>
+				{{/each}}
 			{{/ife}}
 			{{#ife question.type 'msq'}}
-				
-			{{/ife}}-->
-			
+				{{#each question.options}}
+					<p><input type="checkbox" name="ans" value="{{.}}">{{.}}</p>
+				{{/each}}
+			{{/ife}}
 			</form>
 		</div>
 		<div id="Evaluated_results">
@@ -262,19 +265,28 @@ background-color:#e9e9e9;
 		</div>
 		<br><br>
 		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
-		<div id="questions_panel">
-			{{#each questions}}
-				<form action="/student/gotoQn" method="post" ><input type="hidden" name="qnum" value="{{@index}}"><button class="qn_button" >{{@index}}</button></form>
-			{{/each}}
+		<div id="questions_panel">{{#each questions}}<button class="qn_button" onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="toQnum" value="{{@index}}">{{/each}}
 		</div>
 		
 	</div>
 	
 </div>
 <script>
-	function appendQnNo(node)
+	function addToForm(node)
+	{
+		let qform = document.getElementById("question_form");
+		//alert(qform);
+		let navinp = node.nextSibling;
+		//navinp.setAttribute("value",node.innerHTML);
+		qform.appendChild(node.nextSibling);
+
+		//alert(qform.lastChild.getAttribute("type"));
+		qform.submit();
+	}
+	/*function appendQnNo(node)
 	{
 		//onsubmit="appendQnNo(this)"
+		//<input type="hidden" name="qnum" value="{{@index}}">
 		let cn = node.firstChild;
 		let qnum = cn.innerHTML;
 		let action = node.getAttribute('action');
@@ -282,7 +294,7 @@ background-color:#e9e9e9;
 		node.setAttribute('action',qnlink);
 		node.submit();
 		
-	}
+	}*/
 </script>
 <!-- </div> -->
 </body>
