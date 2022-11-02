@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS question (
 );
 
 CREATE TABLE IF NOT EXISTS response (
-    ResponseId VARCHAR PRIMARY KEY,
+    ResponseId SERIAL PRIMARY KEY,
     QnId SERIAL,
     StudentId VARCHAR,
     Response VARCHAR,
