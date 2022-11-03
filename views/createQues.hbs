@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Question</title>
+    <script>
+        var x = `
+        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
+        </div>`;
+        var y = `
+        <div id="options">
+            <div id="optionsSoFar"></div>
+            <textarea name="option" cols="100" rows="2" id="option" type="button" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
+        </div>
+        <div id="limits">
+            <p>Duration : <input name="duration" type="text"> minutes </p>
+            <p>Marks : <input name="marks1" type="text"> marks </p>
+            <p>Feedback :</p> 
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
+        </div>`;
+        var t = `
+        <div id="options">
+            <div id="optionsSoFar"></div>
+            <textarea name="option" cols="100" rows="2" id="option" type="button" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('multi')">Create Option</button>
+        </div>
+        <div id="limits">
+            <p>Duration : <input name="duration" type="text"> minutes </p>
+            <p>Marks : <input name="marks1" type="text"> marks </p>
+            <p>Feedback :</p> 
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
+        </div>`;
+        var z = `
+        <div id="limits">
+            <p>Duration : <input name="duration" type="text"> minutes </p>
+            <p>Marks : <input name="marks1" type="text"> marks </p>
+            <p>Feedback :</p> 
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
+        </div>`;
+        var w = `
+        <div id="limits">
+            <p>Answer Range: <input name="fromprecision" type="text"> to <input name="toprecision" type="text"> </p>
+            <p>Duration : <input name="duration" type="text"> minutes </p>
+            <p>Marks : <input name="marks1" type="text"> marks </p>
+            <p>Feedback :</p> 
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
+        </div>
+        `;
+        var schoice = x + y;
+        var mchoice = x + t;
+        var subjective = x + z;
+        var integer = x + w;
+        function createOption(type) {
+            var x = document.getElementById('option').value;
+            if (x == '') {
+                alert("Field can't be empty");
+            }
+            else {
+                var old = document.getElementById('optionsSoFar').innerHTML;
+                if (old == '') {
+                    if (type == 'single') {
+                        old += '<p> Choose one of these options : </p><br>';
+                    }
+                    else {
+                        old += '<p> Choose options : </p><br>';
+                    }
+                }
+                if (type == 'single') {
+                    old += `<p> <input type="radio" class="optionID" name="option" value=${x}>${x}</p><br>`;
+                }
+                else {
+                    old += `<p> <input type="checkbox" class="optionID" name="option" value=${x}>${x}</p><br>`;
+                }
+                document.getElementById('optionsSoFar').innerHTML = old;
+            }
+        }
+        function caterType(type) {
+            var x = type.options[type.selectedIndex].value;
+            if (x == 'schoice') {
+                document.getElementById('holds').innerHTML = schoice;
+            }
+            else if (x == 'mchoice') {
+                document.getElementById('holds').innerHTML = mchoice;
+            }
+            else if (x == 'integer') {
+                document.getElementById('holds').innerHTML = integer;
+            }
+            else if (x == 'subjective') {
+                document.getElementById('holds').innerHTML = subjective;
+            }
+        }
+        function toggleRightPanel() {
+            if (document.getElementById("right_panel").style.display == "inline") {
+                document.getElementById("right_panel").style.display = "none";
+                document.getElementById("questions_panel").style.display = "grid";
+                document.getElementById("main_area").style.width = "100%";
+            }
+            else {
+                document.getElementById("evaluation_panel").style.display = "none";
+                document.getElementById("right_panel").style.display = "inline";
+                document.getElementById("questions_panel").style.display = "grid";
+                document.getElementById("main_area").style.width = "79.25%";
+            }
+        }
+        function toggleEvalPanel() {
+            if (document.getElementById("evaluation_panel").style.display == "inline") {
+                document.getElementById("evaluation_panel").style.display = "none";
+                document.getElementById("questions_panel").style.display = "grid";
+                document.getElementById("main_area").style.width = "100%";
+            }
+            else {
+                document.getElementById("evaluation_panel").style.display = "inline";
+                document.getElementById("right_panel").style.display = "none";
+                document.getElementById("questions_panel").style.display = "grid";
+                document.getElementById("main_area").style.width = "70%";
+            }
+        }
+        function hideRightPanel() {
+            document.getElementById("right_panel").style.display = "none";
+            document.getElementById("question_area").style.width = "100%";
+        }
+    </script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        body {
+            margin: 0px;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        #app_header {
+            background-color: #d6d6f5;
+            color: #3333cc;
+            height: clamp(45px, 9vh, 55px);
+            text-transform: uppercase;
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+            padding-top: 20px;
+            font-family: sans-serif;
+            border-bottom: 1px solid black;
+        }
+
+        #details {
+            height: 50vh;
+            display: flex;
+            justify-content: left;
+            background-color: #dccae0;
+            margin: auto;
+            height: 2%;
+            padding: 2% 5%;
+            flex-direction: column;
+        }
+
+        #qstn {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: left;
+            background-color: #d2a7f0;
+            height: 5%;
+            padding: 2% 5%;
+        }
+
+        #options {
+            justify-content: space-around;
+            align-items: left;
+            background-color: #d2a7f0;
+            height: 5%;
+            padding: 2% 5%;
+            flex-direction: column;
+        }
+
+        #limits {
+            justify-content: space-around;
+            align-items: left;
+            background-color: #d2a7f0;
+            height: 5%;
+            padding: 1% 5%;
+            flex-direction: column;
+        }
+
+        #action_area {
+            padding: 10px;
+            display: flex;
+            border-top: 2px solid rgb(216, 62, 62);
+            float: down;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        #right_panel {
+            display: none;
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
+            background-color: white;
+            width: 20.4%;
+            float: right;
+            height: 75%;
+            z-index: 2;
+        }
+
+        #evaluation_panel {
+            display: inline;
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
+            background-color: white;
+            width: 29%;
+            float: right;
+            height: 75%;
+            z-index: 2;
+        }
+
+        #questions_panel {
+            display: none;
+            grid-template-columns: auto auto auto;
+            column-gap: 10%;
+            row-gap: 5%;
+            z-index: 3;
+            background-color: white;
+            align-content: center;
+            height: 30%;
+            margin-top: 8px;
+            padding: 5px;
+        }
+
+        .qn_button {
+            background-color: #e9e9e9;
+            border: 1px solid grey;
+            padding: 20px;
+            margin: 4px;
+            border-radius: 10px 0px 0px 0px;
+            text-align: center;
+            height: 85%;
+            width: 85%;
+            cursor: pointer;
+            box-shadow: 5px 5px 5px lightgrey;
+        }
+
+        .qn_button:hover {
+            transition-duration: 0.05s;
+            font-size: 17px;
+            margin: 0px;
+            background-color: #f1f1e7;
+            box-shadow: 7px 7px 5px lightgrey;
+        }
+
+        #palname {
+            padding: 5%;
+            border-radius: 5%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a class="nav-link" onclick="toggleRightPanel();">Questions Panel</a>
+            <a class="nav-link" onclick="toggleEvalPanel();"> Instructions</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <div id="evaluation_panel" style="display:inline;">
+
+        <form action="/teacher/addQuizDetails" method="post">
+            <div class="row" style="padding:4%">
+                <div class="label">Quiz Title</div>
+                <div class="input"><input type="text" name="qtitle" value="{{qtitle}}"></div>
+            </div>
+            <div class="row" style="padding:4%">
+                <div class="label">Duration</div>
+                <div class="input"><input type="text" name="duration" value="{{duration}}"></div>
+            </div>
+            <div class="row" style="padding:4%">
+                <div class="label">Maximum Marks</div>
+                <div class="input"><input type="text" name="marks" value="{{marks}}"></div>
+            </div>
+            <div class="row" style="padding:4%">
+                <div class="label">Passkey</div>
+                <div class="input"><input type="text" name="passkey" maxlength="6" value="{{passkey}}"></div>
+            </div>
+            <div class="row" style="padding:4%">
+                <div>Instructions</div>
+                <textarea name="instructions" rows="2" cols="30" name="instructions"
+                    style="padding:2%">{{instructions}}</textarea>
+            </div>
+            <div style="padding-left:35%;padding-top:0%;">
+                <input type="hidden" name="qzid" value="{{qzid}}">
+                <button style="border-radius:20px;cursor:pointer;padding:2%">Update</button>
+            </div>
+        </form>
+
+    </div>
+    <div id="right_panel">
+        <div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
+        <div id="questions_panel">{{#each questions}}<button class="qn_button"
+                onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="toQnum"
+                value="{{@index}}">{{/each}}</div>
+    </div>
+    <div id="main_area">
+        <form id="questionForm" method="post">
+            <div id="details">
+                {{quizname}}
+                <div id="questionType" style="margin-top:1%">
+                    Select one of the following Types :
+                    <select name="qtypes" style="border-radius:5px;" onchange="caterType(this)">
+                        <option value="schoice">Single Correct Choice Type</option>
+                        <option value="mchoice">Multi Correct Choice Type</option>
+                        <option value="subjective">Subjective Type</option>
+                        <option value="integer">Integer Type</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="holds">
+                <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
+                </div>
+                <div id="options">
+                    <div id="optionsSoFar"></div>
+                    <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea>
+                    <button style="border-radius:5px;width:max-content;height: fit-content;" type="button"
+                        onclick="createOption('single')">Create Option</button>
+                </div>
+
+                <div id="limits">
+                    <p>Duration : <input name="duration" type="text"> minutes </p>
+                    <p>Marks : <input name="marks1" type="text"> marks </p>
+                    <p>Feedback :</p>
+                    <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback..."></textarea></p>
+                </div>
+            </div>
+            <div id="action_area">
+                <input type="hidden" name="gurla" value="j">
+                <button type="submit" class="action_items">Save and Previous</button>
+                <button type="submit" class="action_items">Save and Next</button>
+                <button type="submit" class="action_items">Delete Question</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        toggleEvalPanel();
+        function addToForm(node) {
+            let qform = document.getElementById("question_form");
+            //alert(qform);
+            let navinp = node.nextSibling;
+            //navinp.setAttribute("value",node.innerHTML);
+            qform.appendChild(node.nextSibling);
+
+            //alert(qform.lastChild.getAttribute("type"));
+            qform.submit();
+        }
+        /*function appendQnNo(node)
+        {
+            //onsubmit="appendQnNo(this)"
+            //<input type="hidden" name="qnum" value="{{@index}}">
+            let cn = node.firstChild;
+            let qnum = cn.innerHTML;
+            let action = node.getAttribute('action');
+            let qnlink = (action + qnum);
+            node.setAttribute('action',qnlink);
+            node.submit();
+            
+        }*/
+        const questionForm = document.querySelector("#questionForm");
+        questionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            var arr = document.querySelectorAll(".optionID");
+            var options = [];
+            var answers = [];
+            var i=1;
+            arr.forEach(element => {
+                options.push(element.value);
+                if(element.checked==true){
+                    answers.push(i);
+                }
+                ++i;
+            });
+            var fromprecision=document.getElementsByName('fromprecision')[0] == null ? "null" : document.getElementsByName('fromprecision')[0].value ;
+            var toprecision=document.getElementsByName('toprecision')[0] == null ? "null" : document.getElementsByName('toprecision')[0].value ;
+            
+            fetch('/teacher/makeQuestions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                 'qzid': '{{qzid}}',
+                 'qtypes': e.target.elements.qtypes.value, 
+                 'question': e.target.elements.question.value, 
+                 'duration': e.target.elements.duration.value, 
+                 'marks': e.target.elements.marks1.value, 
+                 'fromprecision' : fromprecision,
+                 'toprecision': toprecision,
+                 'feedback': e.target.elements.feedback.value, 
+                 'options': options,
+                 'answers': answers
+                })
+            });
+        });
+    </script>
+</body>
+
+</html>
