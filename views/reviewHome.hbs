@@ -108,9 +108,10 @@
         <div class="maxMarks" style="padding:0.2%">Your Marks : {{quiz.totalmarks}} </div>
         <div class="timer" id="timer" style="padding:0.2%"></div>
         <!--div class="code" style="padding:0.2%">Quiz Code : <input type="password" name="pword" size="15" maxlength="6"></div-->
-        <form action="/student/initiateAttempt" method="post">
+        <form action="/student/navigate" method="post">
             <input type="hidden" name="qzcode" value={{quiz.quizid}}>
-            <div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Review Quiz" disabled></div>
+            <input type="hidden" name="toQnum" value="0">
+            <div class="submit" style="padding:4%;margin-left:0%"><input type="Submit" value="Review Quiz"></div>
             <div id="link"></div>
         </form>
     </div>

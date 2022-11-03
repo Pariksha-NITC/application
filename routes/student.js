@@ -62,9 +62,14 @@ router.post('/initiateAttempt',async(req,res) => {
 	await db.none("UPDATE studentquiz SET status='attempting' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 	//let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
+	if(!questions || questions.length==0)
+	{
+		res.redirect(303,'/student');
+		return;
+	}
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=0;
-	
+	req.session.marks=0;
 	//req.session.qzcode = qzcode;
 	let qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
@@ -101,27 +106,27 @@ router.post('/saveAndNavigate',async(req,res) => {
 		console.log(responses);
 		//console.log("yes");
 		if(question.type == 'subjective')
-			await db.none('UPDATE response SET response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response SET response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		else if(question.type == 'mcq')
-			await db.none('UPDATE response set options=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response set response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		else if(question.type == 'msq')
-			await db.none('UPDATE response set options=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 	}
 	else
 	{
 		if(question.type == 'subjective')
 		{
-			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		}
 		else if(question.type == 'mcq')
 		{
 			//console.log(typeof req.body.ans);
 			//console.log(req.body.ans);
-			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		}
 		else if(question.type == 'msq')
 		{
-			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 
 		}
 		/*console.log("no");*/
@@ -147,12 +152,20 @@ router.post('/saveAndNavigate',async(req,res) => {
 		let ans;
 		if(question.type == 'subjective')
 		{
-			ans = responses[0].response;			
+			if((responses[0].response) && (responses[0].response).length != 0)
+				ans = (responses[0].response)[0];
+			else
+				ans=null			
 		}
 		else if(question.type == 'mcq')
-			ans = String((responses[0].options)[0]);
+		{
+			if((responses[0].response) && (responses[0].response).length != 0)
+				ans = String((responses[0].response)[0]);
+			else
+				ans=null
+		}
 		else if(question.type == 'msq')
-			ans = responses[0].options;
+			ans = responses[0].response;
 		console.log(ans);
 		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:ans});
 	}
@@ -202,6 +215,48 @@ router.post('/saveAndEnd',async(req,res) => {
 	quizDetails.instructor = instructor.name;
 	res.render('reviewHome',{quiz:quizDetails});
 });
-
+router.post('/navigate',async(req,res) => {
+	console.log(req.body);
+	let qzcode = req.body.qzcode;
+	let qnum = parseInt(req.body.toQnum);
+	
+	//let respids =  await db.any('SELECT responseid,response.qnid FROM response,question WHERE question.qnid=response.qnid and quizid=$1 and studentid=$2',[qzcode,req.session.userID]);
+	let qnids = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
+	if(qnum == -1)
+		qnum=0;
+	qnum = qnum % qnids.length;
+	console.log(qnids);
+	let response = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[qnids[qnum].qnid,req.session.userID]);
+	let question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnids[qnum].qnid]);
+	if(response && response.length != 0)
+	{
+		console.log(response[0]);
+		//console.log("yes");
+		let ans;
+		if(question.type == 'subjective')
+		{
+			if((response[0].response) && (response[0].response).length != 0)
+				ans = (response[0].response)[0];
+			else
+				ans = null;		
+		}
+		else if(question.type == 'mcq')
+		{
+			if((response[0].response) && (response[0].response).length != 0)
+				ans = String((response[0].response)[0]);
+			else
+				ans = null;
+		}
+		else if(question.type == 'msq')
+			ans = response[0].response;
+		console.log(ans);
+		res.render('quizReview',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:ans});
+	}
+	else
+	{
+		res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null});
+		/*console.log("no");*/
+	}
+});
 
 module.exports = router;

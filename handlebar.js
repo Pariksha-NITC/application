@@ -20,5 +20,13 @@ module.exports = {
                 return options.fn(this);
         }
         return options.inverse(this);
+    },
+    loop : function(var1,options){
+        let ret="";
+        for(let i = 0;i<var1;i++)
+        {
+            ret = ret + options.fn(i);
+        }
+        return ret;
     }
 }

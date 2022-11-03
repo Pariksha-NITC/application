@@ -1,0 +1,397 @@
+<html>
+<head>
+<script>
+function toggleRightPanel()
+{
+	if(document.getElementById("right_panel").style.display=="inline")
+	{
+		document.getElementById("right_panel").style.display="none";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("main_area").style.width="100%";
+	}
+	else
+	{
+		document.getElementById("evaluation_panel").style.display="none";
+		document.getElementById("right_panel").style.display="inline";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("main_area").style.width="79.25%";
+	}
+}
+function toggleEvalPanel()
+{
+	if(document.getElementById("evaluation_panel").style.display=="inline")
+	{
+		document.getElementById("evaluation_panel").style.display="none";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("main_area").style.width="100%";
+	}
+	else
+	{
+		document.getElementById("evaluation_panel").style.display="inline";
+		document.getElementById("right_panel").style.display="none";
+		document.getElementById("questions_panel").style.display="grid";
+		document.getElementById("main_area").style.width="70%";
+	}
+}
+function toggleResponsePanel()
+{
+	if(document.getElementById("response_panel").style.display=="block")
+	{
+		document.getElementById("response_panel").style.display="none";
+		document.getElementById("question_description").style.height="75%";
+		//document.getElementById("Marks_section").style.height="50%";
+	}
+	else
+	{
+		document.getElementById("response_panel").style.display="block";
+		document.getElementById("question_description").style.height="43%";
+	}
+}
+function enableEdit()
+{
+	document.getElementById("marks_inp").disabled=false;
+	document.getElementById("marks_inp").required=true;
+	document.getElementById("update_button").disabled=false;
+	
+}
+
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body
+{
+	margin: 0px;
+}
+
+#right_panel
+{
+	display: none;
+	border-left:2px solid black;
+	border-bottom:2px solid black;
+	background-color:white;
+	width:20.4%;
+	float:right;
+	height:75%;
+	z-index: 2;
+}
+
+#evaluation_panel
+{
+	display: none;
+	border-left:2px solid black;
+	border-bottom:2px solid black;
+	background-color:white;
+	width:29%;
+	float:right;
+	height:75%;
+	z-index: 2;
+}
+
+#questions_panel
+{
+	!display: none;
+	grid-template-columns: auto auto auto;
+	column-gap:10%;
+	row-gap:5%;
+	z-index: 3;
+	margin-top:8px;
+	padding:5px;
+}
+
+.qn_button
+{
+	background-color:#e9e9e9;
+	border : 1px solid grey;
+	padding:15px;
+	margin:4px;
+	border-radius:10px 0px 0px 0px;
+	text-align:center;
+	height:85%;
+	width:85%;
+	cursor:pointer;
+	box-shadow : 5px 5px 5px lightgrey;
+}
+
+.qn_button:hover
+{
+	font-size:17px;
+	margin:0px;
+	box-shadow : 7px 7px 5px lightgrey;
+}
+
+#navbar
+{
+	display: flex;
+	flex-direction:row-reverse;
+    background-color: #d6d6ef;
+	border-bottom:1px solid black;
+    background-color:#dccae0;
+    height: clamp(55px, 10vh, 55px);
+    
+}
+
+.navbar_items
+{
+	margin:10px;
+	border-radius:25px;
+	border: 1px solid #3333cc;
+	color:#3333cc;
+	cursor:pointer;
+}
+
+.navbar_items:hover
+{
+	background-color: #3333cc;
+	font-size:16px;
+	color:white;
+}
+
+#app_header
+{
+	background-color:#d6d6f5;
+	color:#3333cc;
+	height: clamp(45px, 9vh, 55px);
+	text-transform:uppercase;
+	font-size:20px;
+	letter-spacing:2px;
+	text-align:center;
+	padding-top:15px;
+	font-family:sans-serif;
+}
+
+#details
+{
+	background: rgba(175, 50, 80, 0.2);
+	color:black;
+	height: clamp(35px, 8vh, 35px);
+	font-size:17px;
+	padding-top:15px;
+	padding-left:3%;
+	margin:0px;
+	font-family:sans-serif;
+}
+
+#main_area
+{
+	height:75%;
+	width:100%;
+	float:left;
+	z-index:1;
+}
+
+#question_type_area
+{
+	padding:10px;
+	border-bottom: 1px solid black;
+}
+
+#question_description
+{
+	padding:20px;
+	height:75%;
+}
+
+#start_time_panel
+{
+	text-align:center;
+	width:4.5%;
+	display:inline;
+	background-color:white;
+	border:2px solid black;
+	margin-right:2%;
+	margin-left:1%;	
+}
+
+#end_time_panel
+{
+	text-align:center;
+	width:5%;
+	display:inline;
+	background-color:white;
+	border:2px solid black;	
+}
+
+#allotted_time_panel
+{
+	text-align:center;
+	border-bottom:2px solid black;
+}
+
+
+#action_area{
+	padding:10px;
+	display:flex;
+	//margin-top:1%;
+	border-top: 2px solid black;
+	float:down;
+	//justify-content:left;
+	gap :10px;
+	z-index:1;
+	//width:77.85%;
+	//position:static;
+	border-bottom: 2px solid black;
+	padding-bottom:5px;
+}
+#action_items
+{
+	
+}
+#Marks_section{
+	padding:1%;
+	float:right;
+	text-align:center;
+	height:41%;
+	z-index:2;
+	width:18%;
+	margin-top:1.2%;
+	background-color:rgba(0,120,120,0.1);
+}
+.textbox
+{
+	padding:3%;
+}
+
+#edit
+{
+	margin-right:10%;
+	cursor : pointer;
+}
+
+#update_button
+{
+	cursor:pointer;
+}
+
+.marks_panel
+{
+	padding:2%;
+}
+
+#response_panel
+{
+	display:none;
+	padding-left:0.5%;
+	padding-top:1%;
+	background-color:#dccae0;
+	height:32%;
+	z-index:2.5;
+}
+
+#response_area
+{
+	margin-left:0.5%;
+	margin-top:1%;
+}
+</style>
+</head>
+<body>
+
+	<div id="app_header">
+		Pariksha-NITC
+	</div>
+	
+	<div id="details">
+		Quiz 1
+	</div>
+	
+	<nav id="navbar">
+		<button class="navbar_items" onclick="toggleRightPanel();" >Qns Panel</button>
+		<button class="navbar_items" onclick="alert('Instructions');" >Instructions</button>
+		<button class="navbar_items" onclick="toggleEvalPanel();" >Eval. Panel</button>
+		<button class="navbar_items" onclick="toggleResponsePanel();" >Resp. Panel</button>
+	</nav>
+
+
+	<div id ="main_area">
+		
+		<div id="question_type_area">
+			Question type: Subjective
+		</div>
+		
+		<div id="question_description">
+			Question 1
+			
+		<div id="Marks_section">
+			<br><br><br><br>
+				<div style="//background-color:white;">Marks 5</div><br>
+				<!--Bookmark qn &nbsp; <i class="fa fa-bookmark" id="edit" style="cursor:pointer;color:grey;"></i>-->
+			</div>
+		</div>	
+		
+		<div id="response_panel">
+			Your response
+			<div id ="response_area">
+				<textarea rows="6" cols="138" disabled style="padding:1%;background-color:white;">Answer is 10.</textarea>
+			</div>	
+			
+		</div>
+		<div id="action_area">
+			<button class = "action_items" onclick="addToForm(this)">Previous</button><input type="hidden" name="toQnum" value="{{#dec}}{{currentQnNumber}}{{/dec}}">
+			<button class = "action_items" onclick="addToForm(this)">Save and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
+			<button class = "action_items" onclick="addToForm(this)">Mark for Review and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
+			<button class = "action_items" onclick="document.getElementById('question_form').reset()">Clear response</button>
+	</div>
+
+	</div>
+	
+	<div id="evaluation_panel">
+	
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;">Marked As</div>
+		<div class="marks_panel">
+		<form onsubmit="marksUpdatedHandler()" style="display:inline;">
+			<input type="checkbox" id="marks_inp" checked disabled >Correct
+			<i class="fa fa-edit" id="edit" onclick="enableEdit();"></i>
+			<input type="submit" id="update_button" value="Update" disabled >
+		</form>
+		</div>
+		
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Marks awarded</div>
+		<div class="marks_panel">
+			<form onsubmit="marksUpdatedHandler()" style="display:inline;">
+				<input type="text" id="marks_inp" value="100" required disabled >
+				<i class="fa fa-edit" id="edit" onclick="enableEdit();"></i>
+				<input type="submit" id="update_button" value="Update" disabled >
+			</form>
+		</div>
+		
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Feedback section</div>
+		<div class ="textbox">
+			<textarea placeholder="Give your feedback" rows="7" cols="50"></textarea>
+		</div>
+		
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Candidate Comments</div>
+		<div class="textbox">
+			<textarea  rows="7" cols="50" disabled></textarea>
+		</div>
+		
+	</div>
+	
+	<div id="right_panel">
+		<div id = "allotted_time_panel">
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;">Allotted time</div>
+			00:00:00
+		</div>
+		<br><br>
+		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
+		<div id="questions_panel">
+			
+			<button class="qn_button" > 1 </button>
+			<button class="qn_button">2</button>
+			<button class="qn_button">3</button>
+			<button class="qn_button">4</button>
+			<button class="qn_button">5</button>
+			<button class="qn_button">6</button>
+			<button class="qn_button">7</button>
+			<button class="qn_button">8</button>
+			<button class="qn_button">9</button>
+			<button class="qn_button">10</button>
+			<button class="qn_button">11</button>
+			<button class="qn_button">12</button>
+		</div>
+		
+	</div>
+	
+</div>
+
+</body>
+</html>
