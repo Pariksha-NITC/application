@@ -1,2 +1,63 @@
+
+<head>
+    
+</head>
+
+<body>
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
+<h2 class="timer"></h2>
+
+<script>
+class Time{
+    hour;
+    minute;
+    sec;
+}
+
+function timer(totalTime, startTime){
+    let currTime = Date.now();
+    let timeElapsed = currTime - startTime;
+
+    let left = new Time();
+
+    left.hour = 0;
+    left.minute = 0;
+    left.sec = 0;
+    let timeRemainingSec = (totalTime - timeElapsed)/1000 + 1;
+
+    if(timeRemainingSec <= 0){
+        return left;
+    }
+    
+
+    left.hour = Math.floor(timeRemainingSec / (60 * 60));
+    left.minute = Math.floor(timeRemainingSec / 60 - left.hour * 60);
+    left.sec = Math.floor(timeRemainingSec - left.minute * 60 - left.hour * 60 * 60); 
+
+    return left;
+
+}
+
+
+function beautifyTime(hr, min, sec){
+    let prettyTime = "";
+    prettyTime += (hr.toString().padStart(2, "0")) + ":";
+    prettyTime += (min.toString().padStart(2, "0")) + ":";
+    prettyTime += (sec.toString().padStart(2, "0"));
+    return prettyTime;
+}
+
+let timeNow = Date.now();
+
+let timerSetInterval = setInterval(() => {
+  let left = timer(70000, timeNow);
+  // console.log(hr);
+  if(left.hour == 0 && left.minute == 0 && left.sec == 0)
+    clearInterval(timerSetInterval);
+
+    let time = document.querySelector(".timer");
+  time.innerHTML = beautifyTime(left.hour, left.minute, left.sec);}, 1000);
+
+</script>
+</body>

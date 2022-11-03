@@ -3,6 +3,8 @@ const { db,  QueryResultError, qrec } = require('../db');
 const router = express.Router();
 const {executeQuery} = require('../helpers');
 const {studentProtected} = require('../utils');
+const {checkTime} = require('../utils')
+
 
 router.get('/', studentProtected, async(req,res) => {
 	console.log('Inside student');
@@ -67,9 +69,11 @@ router.post('/initiateAttempt',async(req,res) => {
 		res.redirect(303,'/student');
 		return;
 	}
+	let quizTime = await db.one('SELECT Duration FROM quiz WHERE quizid=$1', [qzcode]);
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=0;
-	req.session.marks=0;
+	req.session.quizDuration = quizTime.duration;
+	console.log(req.session.quizDuration);req.session.marks=0;
 	//req.session.qzcode = qzcode;
 	let qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
@@ -79,11 +83,17 @@ router.post('/initiateAttempt',async(req,res) => {
 	let question = await db.one('SELECT * FROM question WHERE quizid=$1 AND qnid=$2',[qzcode,qnNumberArr[0]]);
 	req.session.question=question;
 	console.log(qnNumberArr);
-	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber});
+	console.log(req.session.quizDuration);
+	req.session.startTime = Date.now();
+	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber, 
+		quizTime:req.session.quizDuration, timeNow:req.session.startTime});
 	//res.send("Successfully attempted");
 
+	//Timer Starts here for first question
+	
+
 })
-router.post('/saveAndNavigate',async(req,res) => {
+router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
@@ -101,6 +111,8 @@ router.post('/saveAndNavigate',async(req,res) => {
 		console.log(timeout);
 		res.redirect(303,'/logout');
 	}	*/
+
+
 	if(responses.length != 0)
 	{
 		console.log(responses);
@@ -167,11 +179,14 @@ router.post('/saveAndNavigate',async(req,res) => {
 		else if(question.type == 'msq')
 			ans = responses[0].response;
 		console.log(ans);
-		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:ans});
+		
+		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:ans,
+			quizTime:req.session.quizDuration, timeNow:req.session.startTime});
 	}
 	else
 	{
-		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:null});
+		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:null,
+			quizTime:req.session.quizDuration, timeNow:req.session.startTime});
 		/*console.log("no");*/
 	}
 	

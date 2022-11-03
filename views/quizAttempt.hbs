@@ -277,8 +277,7 @@ background-color:#e9e9e9;
 	<div id="right_panel">
 		<div id = "time_panel">
 			<div style="background-color:c6e2ff;border-bottom:1px solid black;">Time left</div>
-			
-			00:00:00
+			<div class="timer"></div>
 		</div>
 		<br><br>
 		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
@@ -309,6 +308,60 @@ background-color:#e9e9e9;
 			qform.submit();
 		}
 	}
+	class Time{
+    hour;
+    minute;
+    sec;
+}
+
+function timer(totalTime, startTime){
+    let currTime = Date.now();
+    let timeElapsed = currTime - startTime;
+	
+    let left = new Time();
+
+    left.hour = 0;
+    left.minute = 0;
+    left.sec = 0;
+    let timeRemainingSec = (totalTime - timeElapsed)/1000 + 1;
+
+    if(timeRemainingSec <= 0){
+        return left;
+    }
+    
+
+    left.hour = Math.floor(timeRemainingSec / (60 * 60));
+    left.minute = Math.floor(timeRemainingSec / 60 - left.hour * 60);
+    left.sec = Math.floor(timeRemainingSec - left.minute * 60 - left.hour * 60 * 60); 
+
+    return left;
+
+}
+
+
+function beautifyTime(hr, min, sec){
+    let prettyTime = "";
+    prettyTime += (hr.toString().padStart(2, "0")) + ":";
+    prettyTime += (min.toString().padStart(2, "0")) + ":";
+    prettyTime += (sec.toString().padStart(2, "0"));
+    return prettyTime;
+}
+
+
+
+let timerSetInterval = setInterval(() => {
+	//console.log('{{quizTime}}');
+  let left = timer('{{quizTime}}', '{{timeNow}}');
+  // console.log(hr);
+  if(left.hour == 0 && left.minute == 0 && left.sec == 0){
+    clearInterval(timerSetInterval);
+	
+	}
+
+    let time = document.querySelector(".timer");
+  time.innerHTML = beautifyTime(left.hour, left.minute, left.sec);}, 1000);
+
+</script>
 	/*function appendQnNo(node)
 	{
 		//onsubmit="appendQnNo(this)"

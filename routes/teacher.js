@@ -23,7 +23,7 @@ router.post('/createQuiz', teacherProtected, async(req,res) => {
 
 router.post('/addQuizDetails', teacherProtected,async(req,res) => {
 	let qtitle = req.body.qtitle;
-	let duration = req.body.duration;
+	let duration = parseInt(req.body.duration) * 60 * 1000;
 	let marks = req.body.marks;
 	let passkey = req.body.passkey;
 	let instructions = req.body.instructions;

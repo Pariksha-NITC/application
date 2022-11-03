@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -19,6 +20,9 @@ if (process.env.NODE_ENV === "development") {
     }, 100);
   });
 }
+
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
