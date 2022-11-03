@@ -3,6 +3,7 @@ const { db,  QueryResultError, qrec } = require('../db');
 const router = express.Router();
 const {executeQuery} = require('../helpers');
 const {teacherProtected} = require('../utils');
+const {evaluate} = require('./eval');
 
 router.get('/', teacherProtected, async(req,res) => {
 	const quizzes = await db.any('SELECT * FROM quiz WHERE TeacherId=$1 ORDER BY quizid',[req.session.userID]);
@@ -48,6 +49,12 @@ router.post('/makeQuestions', teacherProtected,async (req,res) => {
 		let x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
 		res.render('createQues',{qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
 	}
+})
+
+router.post('/evaluate',async (req,res) => {
+	qzcode = req.body.qzcode;
+	evaluate(qzcode);
+	//evaluate('qwert');
 })
 
 module.exports = router
