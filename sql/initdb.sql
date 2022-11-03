@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS response (
     ResponseId SERIAL PRIMARY KEY,
     QnId SERIAL,
     StudentId VARCHAR,
-    Response VARCHAR,
+    Response VARCHAR[],
     MarksAwarded NUMERIC,
     Feedback VARCHAR,
     Comment VARCHAR,
