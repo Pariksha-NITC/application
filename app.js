@@ -47,12 +47,8 @@ app.use(
     saveUninitialized: false,
     secret: process.env.APP_SECRET,
     resave: false,
-<<<<<<< Updated upstream
     rolling: true,
     cookie: { maxAge: 86400000 }
-=======
-    cookie: { maxAge: 6000000000 }
->>>>>>> Stashed changes
   })
 );
 

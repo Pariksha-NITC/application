@@ -11,7 +11,7 @@ router.get('/login',(req,res) => {
 	if (req.session.userID) {
 		if(req.session.role === 'student')
 				res.redirect(303,'/student')
-			else if(req.session.role === 'toBeVerified')
+			else if(req.session.role === 'teacher' || req.session.role === 'ta')
 				res.redirect(303,'/teacher')
 		 	else
 		 		res.redirect(303,'/admin');
@@ -41,7 +41,7 @@ router.post('/login',async(req,res) => {
 			// console.log(userRole.role);
 			if(userRole.role === 'student')
 				res.redirect(303,'/student')
-			else if(userRole.role === 'toBeVerified')
+			else if(userRole.role === 'teacher' || userRole.role === 'ta')
 				res.redirect(303,'/teacher')
 		 	else
 		 		res.redirect(303,'/admin');

@@ -18,6 +18,7 @@ router.get('/approveapps', adminProtected, async function (req,res,next) {
   let data = await db.any('SELECT * FROM userdetails WHERE approved=FALSE');
   let apps = [];
   data.forEach((user)=> {
+      user.role = user.role.replace(/(^|\s)\S/g, function(t) { return t.toUpperCase() });
       apps.push({'userID': user.userid, 'name': user.name, 'role':user.role, 'email':user.email})
   })
   res.render('adminApproveApps', {apps: apps});
