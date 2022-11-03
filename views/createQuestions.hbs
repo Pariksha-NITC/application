@@ -1,41 +1,56 @@
 <html>
 <head>
 <script>
-	var x = `
-        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
-        </div>`;
-        var y = `
+	var schoice=`
+        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" onclick="clearField('question')"> Type in Question ... </textarea>
+        </div>
         <div id="options">
             <div id="optionsSoFar"></div>
-            <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
+            <textarea name="option" cols="100" rows="2" id="option" onclick="clearField('option')"> Type in Option ... </textarea> <button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
         </div>
         <div id="limits">
             <p>Duration : <input type="text"> minutes </p>
             <p>Marks : <input type="text"> marks </p>
             <p>Feedback :</p> 
-            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
-        </div>`;
-        var z = `
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" onclick="clearField('feedback')"> Feedback ... </textarea></p>
+        </div>
+        `;
+        var mchoice=`
+        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" onclick="clearField('question')"> Type in Question ... </textarea>
+        </div>
+        <div id="options">
+            <div id="optionsSoFar"></div>
+            <textarea name="option" cols="100" rows="2" id="option" onclick="clearField('option')"> Type in Option ... </textarea> <button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('multi')">Create Option</button>
+        </div>
         <div id="limits">
             <p>Duration : <input type="text"> minutes </p>
             <p>Marks : <input type="text"> marks </p>
             <p>Feedback :</p> 
-            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
-        </div>`;
-        var w = `
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" onclick="clearField('feedback')"> Feedback ... </textarea></p>
+        </div>
+        `;
+        var subjective=`
+        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" onclick="clearField('question')"> Type in Question ... </textarea>
+        </div>
+        <div id="limits">
+            <p>Duration : <input type="text"> minutes </p>
+            <p>Marks : <input type="text"> marks </p>
+            <p>Feedback :</p> 
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" onclick="clearField('feedback')"> Feedback ... </textarea></p>
+        </div>
+        `;
+        var integer=`
+        <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" onclick="clearField('question')"> Type in Question ... </textarea>
+        </div>
         <div id="limits">
             <p>Answer : <input type="text"> </p>
             <p>Precision : <input type="text"> to <input type="text"> </p>
             <p>Duration : <input type="text"> minutes </p>
             <p>Marks : <input type="text"> marks </p>
             <p>Feedback :</p> 
-            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
+            <p><textarea name="feedback" cols="100" rows="1" id="feedback" onclick="clearField('feedback')"> Feedback ... </textarea></p>
         </div>
         `;
-        var schoice = x + y ;
-        var mchoice = schoice;
-        var subjective = x + z ;
-        var integer= x + w ;
         function createOption(type){
             var x=document.getElementById('option').value;
             if(x==''){
@@ -394,18 +409,18 @@ background-color:#e9e9e9;
 				</div>
 			</div>
 			<div id="holds">
-				<div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" onclick="clearField('question')" placeholder="Type in Question ..."></textarea>
+				<div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
 				</div>
 				<div id="options">
 					<div id="optionsSoFar"></div>
-					<textarea name="option" cols="100" rows="2" id="option" onclick="clearField('option')" placeholder="Type in Option ..."></textarea> <button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
+					<textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea> <button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
 				</div>
 
 				<div id="limits">
 					<p>Duration : <input type="text"> minutes </p>
 					<p>Marks : <input type="text"> marks </p>
 					<p>Feedback :</p> 
-					<p><textarea name="feedback" cols="100" rows="1" id="feedback" onclick="clearField('feedback')" placeholder="Feedback..."></textarea></p>
+					<p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback..."></textarea></p>
 				</div>
 			</div>
 			<div id="action_area">

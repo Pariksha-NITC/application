@@ -42,13 +42,14 @@ CREATE TABLE IF NOT EXISTS quiz (
 CREATE TABLE IF NOT EXISTS question (
     QnId SERIAL PRIMARY KEY UNIQUE,
     QuizId SERIAL,
-    Duration NUMERIC,
-    Difficulty VARCHAR,
+    Duration VARCHAR,
     Type VARCHAR,
-    CorrectAnswer VARCHAR,
-    Marks NUMERIC,
-    Penalty NUMERIC,
+    Marks VARCHAR,
     Options VARCHAR[],
+    Feedback VARCHAR,
+    Answers VARCHAR[],
+    Fromprecision VARCHAR,
+    ToPrecision VARCHAR,
     CONSTRAINT fk_quiz
         FOREIGN KEY(QuizId) 
             REFERENCES quiz(QuizId)
