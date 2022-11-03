@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<head>
+	<link rel="stylesheet" href="../../stylesheets/style.css">
+	<style>
+		body {
+			margin: 0px;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 20px;
+			font-family: sans-serif;
+			border-bottom: 1px solid black;
+		}
+
+		#form {
+			background-color: #dccae0;
+			width: 30%;
+			margin: auto;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+		}
+
+		.row {
+			display: block;
+			margin: 12px;
+			padding: 7px;
+		}
+
+		.label {
+			float: left;
+			width: 40%;
+		}
+
+		.input {
+			float: right;
+			width: 50%;
+		}
+
+		.search-button {
+			right: 0%;
+			width: 25%;
+			float: right;
+		}
+
+		input {
+			border-radius: 3px;
+			border-color: #dccae0;
+			float: right;
+			width: 100%;
+		}
+
+		.result-table {
+			width: 100%;
+			border: solid 1pt black;
+			border-collapse: collapse;
+
+		}
+
+		.result-table thead th,
+		tbody td {
+			border: solid 1pt black;
+			text-align: center;
+		}
+
+		.result-table tbody tr:hover {
+			background-color: #000000;
+			color: #ffffff;
+		}
+
+		.action-button {
+			cursor: pointer;
+			width: 100%; 
+			height: 4ch; 
+		}
+	</style>
+</head>
+
+<body>
+	{{!-- <div id="app_header">
+		Pariksha-NITC
+	</div> --}}
+
+	{{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
+		<h2>Admin Panel</h2>
+		Approve Teacher/TA Applications
+	</div>
+	{{!-- <div id="form">
+		<div class="row">
+			<p>Search UserID of User to be removed...</p>
+		</div>
+		<div class="row">
+			<div class="label">UserID:</div>
+			<div class="input"><input type="text" class="userid-search" placeholder="Enter a UserID"></div>
+		</div>
+		<div class="row">
+			<input class="search-button" type="button" value="Search" />
+		</div>
+	</div> --}}
+
+	<div id="form">
+		<div class="row">
+			<p>
+				Pending Applications:
+			</p>
+			</p>
+			(click on the buttons against the user to approve/reject)
+			</p>
+			<table class="result-table">
+				<thead>
+					<tr>
+						<th>UserID</th>
+						<th>Name</th>
+						<th>Role</th>
+						<th>Accept?</th>
+						<th>Reject?</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each apps}}
+					<tr>
+						<td id="user-id">{{this.userID}}</td>
+						<td id="user-name">{{this.name}}</td>
+						<td id="user-role">{{this.role}}</td>
+						<td><button id="approve-button" class="action-button" style="background-color:green;"></button></td>
+						<td><button id="reject-button" class="action-button" style="background-color:red;"></button></td>
+
+					</tr>
+					{{/each}}
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		const tableRows = document.querySelectorAll(".result-table tbody tr");
+		tableRows.forEach((row) => {
+			let userID = row.querySelector('#user-id').textContent.trim();
+			let name = row.querySelector('#user-name').textContent.trim();
+			let role = row.querySelector('#user-role').textContent.trim();
+			let approveBtn = row.querySelector('#approve-button');
+			let rejectBtn = row.querySelector('#reject-button');
+			approveBtn.addEventListener('click', (e) => {
+				var choice = confirm("Are you sure you want to approve:\n\n\t" + userID + "\t\t" + name + "\n\nfor the role of " + role + "?");
+				if (choice)
+					fetch('approveapp', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ "userID": userID, "approved": true })
+					}).then((resp) => {
+						alert('Application approved successfully');
+						location.reload();
+					}).catch((err) => {
+						console.error(err)
+					});
+			});
+			rejectBtn.addEventListener('click', (e) => {
+				var choice = confirm("Are you sure you want to reject:\n\n\t" + userID + "\t\t" + name + "\n\nfor the role of " + role + "?");
+				if (choice)
+					fetch('approveapp', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ "userID": userID, "approved": false })
+					}).then((resp) => {
+						alert('Application rejected successfully');
+						location.reload();
+					}).catch((err) => {
+						console.error(err)
+					});
+			});
+		});
+	</script>
+</body>
+
+</html>

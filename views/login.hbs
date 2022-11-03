@@ -70,9 +70,9 @@
         </div>
     </nav>
     <script>
-        { { #if wrong } }
+        {{#if wrong}}
         alert(`Wrong credentials. Try again.`);
-        { { /if}}
+        {{/if}}
     </script>
     <form method="post" action="/login">
         <div class="login">
@@ -87,7 +87,7 @@
                     <label for="passwd" style="padding-bottom:0px;">Password</label> <input style="width:90%;"
                         type="password" name="password" id="passwd" placeholder="Enter your password">
                 </div>
-                <input style="width:25%;align-self: center;" type="submit" name="submit">
+                <input style="width:25%;align-self: center;" type="submit" value="Submit">
             </fieldset>
         </div>
     </form>

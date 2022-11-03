@@ -1,5 +1,5 @@
 function verifyRole(req, res, next, expectedRoles) {
-    console.log(req.session);
+    // console.log(req.session);
     if (expectedRoles.includes(req.session.role))
         return next();
     else {

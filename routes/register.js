@@ -18,8 +18,11 @@ router.post('/', async (req,res) => {
 	try {
 		await db.none('SELECT userid from login where userid=$1', [userID]);
 		const hashedPasswd = await bcrypt.hash(passwd, parseInt(process.env.SALT_ROUNDS));
-		await db.none('INSERT INTO login(userid,password,loggedin) VALUES ($1,$2,FALSE)', [userID, hashedPasswd]);
-		await db.none('INSERT INTO userdetails(userid,name,role) VALUES ($1,$2,$3)', [userID,name,role]);
+		await db.none('INSERT INTO login(userid,password) VALUES ($1,$2)', [userID, hashedPasswd]);
+		if (role==='student')
+			await db.none('INSERT INTO userdetails(userid,name,role,approved) VALUES ($1,$2,$3,TRUE)', [userID,name,role]);
+		else
+			await db.none('INSERT INTO userdetails(userid,name,role) VALUES ($1,$2,$3)', [userID,name,role]);
 		console.log('User successfully added');
 		res.send("You have successfully registered");
 	}

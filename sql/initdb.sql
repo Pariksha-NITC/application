@@ -9,8 +9,7 @@ DROP TABLE IF EXISTS userDetails CASCADE;
 
 CREATE TABLE IF NOT EXISTS login (
     UserId VARCHAR PRIMARY KEY UNIQUE,
-    Password VARCHAR NOT NULL,
-    LoggedIn BOOLEAN
+    Password VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS userDetails (
@@ -19,6 +18,7 @@ CREATE TABLE IF NOT EXISTS userDetails (
     Email VARCHAR,
 	Role VARCHAR,
     Id VARCHAR UNIQUE,
+    Approved BOOLEAN DEFAULT false,
     CONSTRAINT fk_login
         FOREIGN KEY(UserId) 
             REFERENCES login(UserId)

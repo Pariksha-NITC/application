@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<head>
+	<link rel="stylesheet" href="../../stylesheets/style.css">
+
+	<style>
+
+		body {
+			margin: 0px;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 20px;
+			font-family: sans-serif;
+			border-bottom: 1px solid black;
+		}
+
+		#form {
+			background-color: #dccae0;
+			width: 30%;
+			margin: auto;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+		}
+
+		.row {
+			display:block;
+			margin:12px;
+			padding:7px;
+		}
+
+		.label {
+			float: left;
+			width: 40%;
+		}
+
+		.input {
+			float: right;
+			width: 50%;
+		}
+
+		.search-button {
+			right: 0%;
+			width: 25%;
+			float: right;
+		}
+
+		input {
+			border-radius: 3px;
+			border-color: #dccae0;
+			float: right;
+			width: 100%;
+		}
+
+		.result-table{
+			width: 100%;
+			border: solid 1pt black;
+			border-collapse: collapse;
+
+		}
+
+		.result-table thead th, tbody td {
+			border: solid 1pt black;
+			text-align: center;
+		}
+
+		.result-table tbody tr:hover {
+			background-color: #000000;
+			color: #ffffff;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	{{!-- <div id="app_header">
+		Pariksha-NITC
+	</div> --}}
+
+	{{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
+		<h2>Admin Panel</h2>
+		Remove User
+	</div>
+	<div id="form">
+		<div class="row">
+			<p>Search UserID of User to be removed...</p>
+		</div>
+		<div class="row">
+			<div class="label">UserID:</div>
+			<div class="input"><input type="text" class="userid-search" placeholder="Enter a UserID"></div>
+		</div>
+		<div class="row">
+			<input class="search-button" type="button" value="Search"/>
+		</div>
+	</div>
+
+	<div id="form">
+		<div class="row">
+			<p>
+				Search Results:
+			</p>
+			</p>
+				(select the user to be removed)
+			</p>
+			<table class="result-table">
+				<thead>
+					<tr>
+						<th>UserID</th>
+						<th>Name</th>
+						<th>Role</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="3" style="font-style:italic;">Search for a user ID to get results</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		const searchBtn = document.querySelector(".search-button");
+		const userIDSearch = document.querySelector(".userid-search");
+		const resultTable = document.querySelector(".result-table tbody");
+		searchBtn.addEventListener('click', (e)=> {
+			let userID = userIDSearch.value;
+			fetch('getuser',{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({"userID": userID})
+			}).then(async (res)=>{
+
+				if (res.status === 400) {
+					let respBody = await res.json();
+					let msg = respBody.message;
+					if (msg === 'INVALID')
+						alert('Invalid User')
+					if (msg === 'ADMIN')
+						alert('Cannot remove adminstrators')
+
+				} else {
+					let data = await res.json();
+					let users = data.users;
+					resultTable.innerHTML = "";
+					users.forEach((user) => {
+						const row = document.createElement('tr');
+						const userid = document.createElement('td');
+						userid.innerHTML=user.userID;
+						const name = document.createElement('td');
+						name.innerHTML=user.name;
+						const role = document.createElement('td');
+						role.innerHTML=user.role;
+
+						row.appendChild(userid);
+						row.appendChild(name);
+						row.appendChild(role);
+
+						row.addEventListener('click', (e)=>{
+							var choice=confirm("Are you sure you want to permanently remove:\n\n\t" + user.userID + "\t\t" + user.name + "\n\nand their associated data?");
+							if (choice) {
+								fetch('removeuser', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify({"userID": user.userID})
+								}).then((resp)=> {
+									alert('User removed successfully');
+									row.innerHTML = '<td colspan="3" style="color: #000000; font-style:italic;">Search for a user ID to get results</td>';
+								}).catch((err)=>{
+									console.error(err)
+								});
+							}
+						})
+						resultTable.appendChild(row);
+					})
+					console.log('good boi');
+				}
+			}).catch(err => {
+				console.log(err);
+			})
+		});
+	</script>
+</body>
+
+</html>

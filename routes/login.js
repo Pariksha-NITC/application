@@ -9,11 +9,15 @@ const {executeQuery} = require('../helpers');
 
 router.get('/login',(req,res) => {
 	if (req.session.userID) {
-		console.log(req.session.userID);
-		res.send("Successful");
+		if(req.session.role === 'student')
+				res.redirect(303,'/student')
+			else if(req.session.role === 'toBeVerified')
+				res.redirect(303,'/teacher')
+		 	else
+		 		res.redirect(303,'/admin');
 	}
 	else
-		res.render('login');
+		res.render('login',{wrong:false});
 })
 
 router.post('/login',async(req,res) => {	
@@ -31,16 +35,16 @@ router.post('/login',async(req,res) => {
 	 		var session = req.session;
 	 		session.userID=userID;
 	 		session.role=userRole.role;
-	 		console.log(req.session);
+	 		// console.log(req.session);
 	 		console.log('Log in successful');
-			await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
-			console.log(userRole.role);
+			// await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
+			// console.log(userRole.role);
 			if(userRole.role === 'student')
 				res.redirect(303,'/student')
 			else if(userRole.role === 'toBeVerified')
 				res.redirect(303,'/teacher')
 		 	else
-		 		res.send('Successful');
+		 		res.redirect(303,'/admin');
 	 	}
 	 	else {
 	 		res.render('login',{wrong:true});
@@ -57,8 +61,8 @@ router.post('/login',async(req,res) => {
 })
 
 router.get('/logout', async(req,res) => {
-	await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [req.session.userID]);
-	req.session.destroy();
+	// await db.none('UPDATE login SET loggedin=FALSE WHERE userid=$1', [req.session.userID]);
+	await req.session.destroy();
 	console.log("logged out successfully");
 	res.redirect(303,'/login');
 })

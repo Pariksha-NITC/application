@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<head>
+	<link rel="stylesheet" href="../../stylesheets/style.css">
+	<style>
+		body {
+			margin: 0px;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 20px;
+			font-family: sans-serif;
+			border-bottom: 1px solid black;
+		}
+
+		#form {
+			background-color: #dccae0;
+			width: 30%;
+			margin: auto;
+			margin-top: 2%;
+			height: 5%;
+			padding: 2% 5%;
+		}
+
+		.row {
+			display: block;
+			margin: 12px;
+			padding: 7px;
+		}
+
+		.label {
+			float: left;
+			width: 40%;
+		}
+
+		.input {
+			float: right;
+			width: 50%;
+		}
+
+		.input-button {
+			right: 0%;
+			width: 25%;
+			float: right;
+		}
+
+		input {
+			border-radius: 3px;
+			border-color: #dccae0;
+			float: right;
+			width: 100%;
+		}
+
+		.result-table {
+			width: 100%;
+			border: solid 1pt black;
+			border-collapse: collapse;
+
+		}
+
+		.result-table thead th,
+		tbody td {
+			border: solid 1pt black;
+			text-align: center;
+		}
+
+		.result-table tbody tr:hover {
+			background-color: #000000;
+			color: #ffffff;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	{{!-- <div id="app_header">
+		Pariksha-NITC
+	</div> --}}
+	
+	{{!-- Nav Bar --}}
+	<nav class="nav-bar">
+        <div class="title">
+            <h3>Pariksha-NITC</h3>
+        </div>
+        <div class="nav-links-container">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
+		<h2>Admin Panel</h2>
+		Add User
+	</div>
+	<div id="form">
+		<form id="register-form" method="post">
+			<div class="row">
+				<div class="label">UserID:</div>
+				<div class="input"><input type="text" name="uid" placeholder="Enter a UserID"></div><br><br>
+			</div>
+			<div class="row">
+				<div class="label">Name:</div>
+				<div class="input"><input type="text" name="name" placeholder="Enter name"></div><br><br>
+			</div>
+			<div class="row">
+				<div class="label">Password:</div>
+				<div class="input"><input type="password" name="pwd" placeholder="Create password"></div>
+				<br><br>
+			</div>
+			<div class="row">
+				<div class="label">Confirm Password:</div>
+				<div class="input"><input type="password" placeholder="Re-enter password"></div><br><br>
+			</div>
+			<div class="row">
+				<div class="label">Role:</div>
+				<div class="input">
+					<select name="role" style="border-radius:5px; width:100%; margin: 0">
+						<option value="student">Student</option>
+						<option value="teacher">Teacher</option>
+						<option value="ta">Teacher</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<input id="register-button" class="input-button" type="submit" value="Submit" style="margin-top:10px;border-radius:20px;cursor:pointer;">
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+
+		const registerForm = document.querySelector("#register-form");
+		registerForm.addEventListener('submit',(e)=>{
+			e.preventDefault();
+			fetch('/admin/adduser', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({'name': e.target.elements.name.value, 'uid': e.target.elements.uid.value, 'pwd': e.target.elements.pwd.value, 'role': e.target.elements.role.value})
+			}).then(async (resp)=> {
+				let respBody = await resp.json();
+				let msg = respBody.message;
+				if (resp.status === 400 && msg === 'TAKEN') {
+        			alert(`UserID already taken. Try again.`);
+				}
+				else {
+        			alert(`User successfully registered.`);
+				}
+			}).catch((err)=>{
+				console.error(err);
+			});
+		});
+
+	</script>
+</body>
+
+</html>

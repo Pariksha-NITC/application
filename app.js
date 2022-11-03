@@ -26,6 +26,7 @@ const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const studentRouter = require('./routes/student');
 const teacherRouter = require('./routes/teacher');
+const adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -37,17 +38,17 @@ if (process.env.NODE_ENV === "development") {
 
 // session management
 const session = require("express-session");
-let RedisStore = require("connect-redis")(session);
-const { createClient } = require("redis");
-let redisClient = createClient({legacyMode: true});
-redisClient.connect().catch(console.error);
+let RedisStore = require("./connect-redis-mod")(session);
+const Redis = require("ioredis");
+let redisClient = new Redis()
 app.use(
   session({
     store: new RedisStore({client: redisClient}),
     saveUninitialized: false,
     secret: process.env.APP_SECRET,
     resave: false,
-    cookie: { maxAge: 60000 }
+    rolling: true,
+    cookie: { maxAge: 86400000 }
   })
 );
 
@@ -77,6 +78,7 @@ app.use(cookieParser(process.env.APP_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
 // registering paths
 app.use('/', indexRouter);
 app.use('/',loginRouter);
@@ -84,6 +86,7 @@ app.use('/users', usersRouter);
 app.use('/register',registerRouter);
 app.use('/student',studentRouter);
 app.use('/teacher',teacherRouter);
+app.use('/admin',adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

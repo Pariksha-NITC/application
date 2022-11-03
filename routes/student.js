@@ -8,7 +8,7 @@ router.get('/', studentProtected, async(req,res) => {
 	console.log('Inside student');
 	const quizzes = await db.any('SELECT * FROM quiz WHERE quizid IN(SELECT quizid FROM studentquiz WHERE studentid=$1)',[req.session.userID]);
 	const logMessage = 'Quizzes displayed to student';
-	console.log(quizzes);
+	console.log(logMessage, quizzes);
 	//const quizzes = await executeQuery(query,logMessage)
 	res.render('studentHome', {quizArray:quizzes});
 	/*console.log(quizzes);
