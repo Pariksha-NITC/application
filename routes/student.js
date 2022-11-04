@@ -4,6 +4,7 @@ const router = express.Router();
 const {executeQuery} = require('../helpers');
 const {studentProtected} = require('../utils');
 const {checkTime, checkAttemptStatus} = require('../utils')
+const {secToPrettyTime, beautifyTime} = require('../utils')
 
 
 router.get('/', studentProtected, async(req,res) => {
@@ -49,10 +50,11 @@ router.post('/viewQuiz', studentProtected, async(req,res) =>{
 	let quizid = req.body.qzcode;
 	let response = await db.one('SELECT status FROM studentquiz WHERE quizid=$1 AND studentid=$2',[req.body.qzcode,req.session.userID]);
 	
-	const quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
+	let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
 	quizDetails.instructor = instructor.name;
 	//console.log(quizDetails)
+	quizDetails.duration = Math.floor(quizDetails.duration / 60000);
 	if(response.status == 'attempted')
 	{	
 		let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);
@@ -88,6 +90,10 @@ router.post('/initiateAttempt',async(req,res) => {
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=0;
 	req.session.quizDuration = quizTime.duration;
+	
+	req.session.startQuestTime = Date.now();
+	
+	
 	// console.log(req.session.quizDuration);
 	req.session.marks=0;
 	//req.session.qzcode = qzcode;
@@ -114,6 +120,18 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
 	let question = req.session.question;
+
+	let difference = Date.now() - req.session.startQuestTime;
+
+	let duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+
+	duration = parseInt(duration.duration);
+	console.log("hahahha",duration);
+	duration += difference;
+
+	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
+		[qnNumberArr[qnum],req.session.userID,duration]);
+
 	//console.log(question.qnid);
 	//console.log(req.session.userID);
 	let responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
@@ -166,6 +184,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	 
 	//res.send("Successfully attempted");
 	req.session.qnNumber=qnum;
+	req.session.startQuestTime = Date.now();
 	//console.log(qnNumberArr);
 	//res.send("Successfully reached");
 	question = await db.one('SELECT * FROM question WHERE qnid=$1',[qnNumberArr[qnum]]);
@@ -212,6 +231,21 @@ router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
 	let question = req.session.question;
+	
+	
+	let difference = Date.now() - req.session.startQuestTime;
+
+	let duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+
+	duration = duration.Duration;
+	duration += difference;
+
+	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
+		[qnNumberArr[qnum],req.session.userID,duration]);
+
+
+
+	
 	let responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
 	if(responses.length != 0)
 	{
