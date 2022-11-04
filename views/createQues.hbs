@@ -13,7 +13,7 @@
         var y = `
         <div id="options">
             <div id="optionsSoFar"></div>
-            <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('single')">Create Option</button>
+            <textarea name="option" cols="100" rows="2" id="optionArea" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('single')">Create Option</button>
         </div>
         <div id="limits">
             <p>Duration : <input name="duration" type="text"> minutes </p>
@@ -24,7 +24,7 @@
         var t = `
         <div id="options">
             <div id="optionsSoFar"></div>
-            <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('multi')">Create Option</button>
+            <textarea name="option" cols="100" rows="2" id="optionArea" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('multi')">Create Option</button>
         </div>
         <div id="limits">
             <p>Duration : <input name="duration" type="text"> minutes </p>
@@ -48,12 +48,14 @@
             <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ..."></textarea></p>
         </div>
         `;
-        var schoice = x + y;
-        var mchoice = x + t;
+        var mcq = x + y;
+        var msq = x + t;
         var subjective = x + z;
         var integer = x + w;
+        var options = [];
         function createOption(type) {
-            var x = document.getElementById('option').value;
+            var x = document.getElementById('optionArea').value;
+            options.push(x);
             if (x == '') {
                 alert("Field can't be empty");
             }
@@ -78,11 +80,11 @@
         }
         function caterType(type) {
             var x = type.options[type.selectedIndex].value;
-            if (x == 'schoice') {
-                document.getElementById('holds').innerHTML = schoice;
+            if (x == 'mcq') {
+                document.getElementById('holds').innerHTML = mcq;
             }
-            else if (x == 'mchoice') {
-                document.getElementById('holds').innerHTML = mchoice;
+            else if (x == 'msq') {
+                document.getElementById('holds').innerHTML = msq;
             }
             else if (x == 'integer') {
                 document.getElementById('holds').innerHTML = integer;
@@ -311,7 +313,7 @@
     <div id="right_panel">
         <div style="background-color:#e8c6ff;;text-align:center;">Questions Palette</div>
         <div id="questions_panel">{{#each questions}}<button class="qn_button"
-                onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="toQnum"
+                onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="qnid"
                 value="{{qnid}}">{{/each}}</div>
     </div>
     <div id="main_area">
@@ -322,15 +324,15 @@
                     Select one of the following Types :
                     <select name="qtypes" style="border-radius:5px;" onchange="caterType(this)">
                         {{#ife qexistence 'true' }}
-                            {{#ife type 'schoice'}}
-                                <option value="schoice" selected>Single Correct Choice Type</option>
+                            {{#ife type 'mcq'}}
+                                <option value="mcq" selected>Single Correct Choice Type</option>
                             {{else}}
-                                <option value="schoice">Single Correct Choice Type</option>
+                                <option value="mcq">Single Correct Choice Type</option>
                             {{/ife}}
-                            {{#ife type 'mchoice'}}
-                                <option value="mchoice" selected>Multi Correct Choice Type</option>
+                            {{#ife type 'msq'}}
+                                <option value="msq" selected>Multi Correct Choice Type</option>
                             {{else}}
-                                <option value="mchoice">Multi Correct Choice Type</option>
+                                <option value="msq">Multi Correct Choice Type</option>
                             {{/ife}}
                             {{#ife type 'subjective'}}
                                 <option value="subjective" selected>Subjective Type</option>
@@ -343,8 +345,8 @@
                                 <option value="integer" >Integer Type</option>
                             {{/ife}}
                         {{else}}
-                            <option value="schoice">Single Correct Choice Type</option>
-                            <option value="mchoice">Multi Correct Choice Type</option>
+                            <option value="mcq">Single Correct Choice Type</option>
+                            <option value="msq">Multi Correct Choice Type</option>
                             <option value="subjective">Subjective Type</option>
                             <option value="integer">Integer Type</option>
                         {{/ife}}
@@ -353,37 +355,86 @@
             </div>
 
             <div id="holds">
-                <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
-                </div>
-                <div id="options">
-                    <div id="optionsSoFar"></div>
-                    <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea>
-                    <button style="border-radius:5px;width:max-content;height: fit-content;" type="button"
-                        onclick="createOption('single')">Create Option</button>
-                </div>
+                {{#ife qexistence 'true'}}
+                    <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ...">{{question}}</textarea>
+                    </div>
+                    {{#ife type 'mcq'}}
+                            <div id="options">
+                            <div id="optionsSoFar">
+                                <p> Choose one of these options : </p><br>
+                                <p> Choose options : </p><br>
+                                {{#each options}}
+                                    <p><input type="radio" class="optionID" name="option" {{#if ../answers}}{{#ife @index ../answers}}checked{{/ife}}{{/if}}>{{.}}</p>
+                                {{/each}}
+                            </div>
+                            <textarea name="option" cols="100" rows="2" id="optionArea" placeholder="Type in Option ..."></textarea>
+                            <button style="border-radius:5px;width:max-content;height: fit-content;" type="button"
+                                onclick="createOption('single')">Create Option</button>
+                        </div>    
+                    {{/ife}}
+                    {{#ife type 'msq'}}
+                            <div id="options">
+                            <div id="optionsSoFar">
+                                <p> Choose one of these options : </p><br>
+                                <p> Choose options : </p><br>
+                                {{#each options}}
+                                    <p><input type="checkbox" class="optionID" name="option" {{#if ../answers}}{{#in @index ../answers}}checked{{/in}}{{/if}}>{{.}}</p>
+                                {{/each}}
+                            </div>
+                            <textarea name="option" cols="100" rows="2" id="optionArea" placeholder="Type in Option ..."></textarea>
+                            <button style="border-radius:5px;width:max-content;height: fit-content;" type="button"
+                                onclick="createOption('multi')">Create Option</button>
+                        </div>    
+                    {{/ife}}
+                    {{#ife type 'integer'}}
+                            <div id="limits">
+                                <p>Answer Range: <input name="fromprecision" type="text" value="{{fromprecision}}"> to <input name="toprecision" type="text" value="{{toprecision}}"> </p>
+                                <p>Duration : <input name="duration" type="text" value="{{duration}}"> minutes </p>
+                                <p>Marks : <input name="marks1" type="text" value="{{marks}}"> marks </p>
+                                <p>Feedback :</p> 
+                                <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ...">{{feedback}}</textarea></p>
+                            </div>   
+                    {{else}}
+                        <div id="limits">
+                            <p>Duration : <input name="duration" type="text" value="{{duration}}"> minutes </p>
+                            <p>Marks : <input name="marks1" type="text" value="{{marks}}"> marks </p>
+                            <p>Feedback :</p> 
+                            <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback ...">{{feedback}}</textarea></p>
+                        </div>
+                    {{/ife}}
+                {{else}}
+                    <div id="qstn"> Question <textarea name="question" cols="100" rows="4" id="question" placeholder="Type in Question ..."></textarea>
+                    </div>
+                    <div id="options">
+                        <div id="optionsSoFar"></div>
+                        <textarea name="option" cols="100" rows="2" id="optionArea" placeholder="Type in Option ..."></textarea>
+                        <button style="border-radius:5px;width:max-content;height: fit-content;" type="button"
+                            onclick="createOption('single')">Create Option</button>
+                    </div>
 
-                <div id="limits">
-                    <p>Duration : <input name="duration" type="text"> minutes </p>
-                    <p>Marks : <input name="marks1" type="text"> marks </p>
-                    <p>Feedback :</p>
-                    <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback..."></textarea></p>
-                </div>
+                    <div id="limits">
+                        <p>Duration : <input name="duration" type="text"> minutes </p>
+                        <p>Marks : <input name="marks1" type="text"> marks </p>
+                        <p>Feedback :</p>
+                        <p><textarea name="feedback" cols="100" rows="1" id="feedback" placeholder="Feedback..."></textarea></p>
+                    </div>
+                {{/ife}}
             </div>
             <div id="action_area">
                 <input type="hidden" name="qzid" value="{{qzid}}">
-                <button class = "action_items" onclick="addToForm(this)">Save and Previous</button><input type="hidden" name="toQnum" value="{{#dec}}{{currentQnNumber}}{{/dec}}">
-			    <button class = "action_items" onclick="addToForm(this)">Save and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
+                <button class = "action_items" onclick="">Save and Previous</button><input type="hidden" name="toQnum" value="{{#dec}}{{currentQnNumber}}{{/dec}}">
+			    <button class = "action_items" onclick="">Save and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
 			    <button class = "action_items" >Delete Question</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">	
             </div>
         </form>
     </div>
-    
+    <form id="submitForm" action="/teacher/queryQuestions" method="POST">
+        <input type="hidden" name="qzid" value="{{qzid}}">
+    </form>
     <script>
         toggleEvalPanel();
         function addToForm(node) {
-            let qform = var form = document.createElement("form");
-            var element1 = document.createElement("input"); 
-            var element2 = document.createElement("input");  
+            let qform = document.getElementById("submitForm");
             //alert(qform);
             let navinp = node.nextSibling;
             //navinp.setAttribute("value",node.innerHTML);
@@ -408,11 +459,10 @@
         questionForm.addEventListener('submit', (e) => {
             e.preventDefault();
             var arr = document.querySelectorAll(".optionID");
-            var options = [];
             var answers = [];
-            var i=1;
+            var i=0;
             arr.forEach(element => {
-                options.push(element.value);
+                alert(element.innerHTML);
                 if(element.checked==true){
                     answers.push(i);
                 }

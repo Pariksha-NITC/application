@@ -21,7 +21,7 @@ async function evaluate(qzcode)
                 else if((response.response)[0] == question.correctanswer[0])
                     marks = question.marks;
                 else
-                    marks = -1*question.penalty;
+                    marks = 0;
                 
             }
             else if(question.type == 'mcq')
@@ -31,7 +31,7 @@ async function evaluate(qzcode)
                 else if((response.response)[0] == question.correctanswer[0])
                     marks = question.marks;
                 else
-                    marks = -1*question.penalty;
+                    marks = 0;
                 
             }
             else if(question.type == 'msq')		
@@ -39,7 +39,7 @@ async function evaluate(qzcode)
                 if(!(response.response) || (response.response).length == 0)
                     marks = 0
                 else if((question.correctanswer).length != (response.response).length)
-                    marks = -1*question.penalty;
+                    marks = 0;
                 else
                 {
                     let k;
@@ -47,7 +47,7 @@ async function evaluate(qzcode)
                     {
                         if((response.response)[k] != question.correctanswer[k])
                         {
-                            marks = -1*question.penalty;
+                            marks = 0;
                             break;
                         }
                     }

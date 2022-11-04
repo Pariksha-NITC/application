@@ -58,7 +58,8 @@ router.post('/createQues',teacherProtected,async (req,res) => {
 })
 
 router.post('/queryQuestions',teacherProtected,async (req,res) => {
-	let qNumber = req.body.toQnum;
+	let qNumber = req.body.qnid;
+	console.log(qNumber);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	let y = await db.any('SELECT * FROM question where qnid=$1',[qNumber]);
 	let x = await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
