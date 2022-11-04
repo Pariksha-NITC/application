@@ -54,7 +54,13 @@ router.post('/viewQuiz', studentProtected, async(req,res) =>{
 	quizDetails.instructor = instructor.name;
 	//console.log(quizDetails)
 	if(response.status == 'attempted')
+	{	
+		let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);
+		quizDetails.attemptmarks = await db.one('SELECT SUM(marksawarded) FROM response,question WHERE studentid=$1 AND quizid=$2 AND response.qnid=question.qnid',[req.session.userID,quizid]);
+		quizDetails.attemptmarks = quizDetails.attemptmarks.sum
+		console.log(quizDetails.attemptmarks)
 		res.render('reviewHome',{quiz:quizDetails});
+	}
 	else
 		res.render('qhmp',{quiz:quizDetails})
 })
