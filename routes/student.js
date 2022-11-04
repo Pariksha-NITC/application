@@ -3,7 +3,7 @@ const { db,  QueryResultError, qrec } = require('../db');
 const router = express.Router();
 const {executeQuery} = require('../helpers');
 const {studentProtected} = require('../utils');
-const {checkTime} = require('../utils')
+const {checkTime, checkAttemptStatus} = require('../utils')
 
 
 router.get('/', studentProtected, async(req,res) => {
@@ -200,7 +200,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	}
 	
 });
-router.post('/saveAndEnd',async(req,res) => {
+router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 	console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
