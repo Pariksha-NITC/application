@@ -261,13 +261,12 @@
 </head>
 
 <body style="background-color:#dccae0">
-
     <nav class="nav-bar">
         <div class="title">
             <h3>Pariksha-NITC</h3>
         </div>
         <div class="nav-links-container">
-            <a href="/" class="nav-link">Home</a>
+            <a href="/teacher" class="nav-link">Home</a>
             <a class="nav-link" onclick="toggleRightPanel();">Questions Panel</a>
             <a class="nav-link" onclick="toggleEvalPanel();"> Instructions</a>
             <a href="/logout" class="nav-link">Logout</a>
@@ -288,7 +287,7 @@
             </div>
             <div class="row" style="padding:4%">
                 <div class="label">Duration</div>
-                <div class="input"><input type="text" name="duration" value="{{duration}}"></div>
+                <div class="input"><input type="text" name="duration1" value="{{duration1}}"></div>
             </div>
             <div class="row" style="padding:4%">
                 <div class="label">Maximum Marks</div>
@@ -317,9 +316,10 @@
                 value="{{qnid}}">{{/each}}</div>
     </div>
     <div id="main_area">
-        <form id="questionForm" action="/teacher/makeQuestions" method="post">
+        <form id="questionForm" action="/teacher/createQues" method="post">
             <div id="details">
                 {{quizname}}
+                
                 <div id="questionType" style="margin-top:1%">
                     Select one of the following Types :
                     <select name="qtypes" style="border-radius:5px;" onchange="caterType(this)">
@@ -362,8 +362,10 @@
                             <div id="options">
                             <div id="optionsSoFar">
                                 <p> Choose one of these options : </p><br>
-                                <p> Choose options : </p><br>
                                 {{#each options}}
+                                    <script>
+                                        options.push('{{.}}');
+                                    </script>
                                     <p><input type="radio" class="optionID" name="option" {{#if ../answers}}{{#ife @index ../answers}}checked{{/ife}}{{/if}}>{{.}}</p>
                                 {{/each}}
                             </div>
@@ -375,9 +377,11 @@
                     {{#ife type 'msq'}}
                             <div id="options">
                             <div id="optionsSoFar">
-                                <p> Choose one of these options : </p><br>
                                 <p> Choose options : </p><br>
                                 {{#each options}}
+                                    <script>
+                                        options.push('{{.}}');
+                                    </script>
                                     <p><input type="checkbox" class="optionID" name="option" {{#if ../answers}}{{#in @index ../answers}}checked{{/in}}{{/if}}>{{.}}</p>
                                 {{/each}}
                             </div>
@@ -421,15 +425,22 @@
                 {{/ife}}
             </div>
             <div id="action_area">
-                <input type="hidden" name="qzid" value="{{qzid}}">
-                <button class = "action_items" onclick="">Save and Previous</button><input type="hidden" name="toQnum" value="{{#dec}}{{currentQnNumber}}{{/dec}}">
-			    <button class = "action_items" onclick="">Save and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
-			    <button class = "action_items" >Delete Question</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">	
+                <input type="hidden" name="qnid" value="{{qnid}}">
+                <button class = "action_items" type="button" id="save">Save</button>
+			    <button class = "action_items" type="button" id="create">Create Question</button>
+			    <button class = "action_items" type="button" id="delete">Delete Question</button>	
             </div>
         </form>
     </div>
     <form id="submitForm" action="/teacher/queryQuestions" method="POST">
         <input type="hidden" name="qzid" value="{{qzid}}">
+    </form>
+    <form id="createForm" action="/teacher/createPage" method="POST">
+        <input type="hidden" name="qzid" value="{{qzid}}">
+    </form>
+    <form id="deleteForm" action="/teacher/deleteQUestion" method="POST">
+        <input type="hidden" name="qzid" value="{{qzid}}">
+        <input type="hidden" name="qnid" value="{{qnid}}">
     </form>
     <script>
         toggleEvalPanel();
@@ -455,14 +466,13 @@
             node.submit();
             
         }*/
-        const questionForm = document.querySelector("#questionForm");
-        questionForm.addEventListener('submit', (e) => {
+        const saveButton = document.getElementById("save");
+        saveButton.addEventListener('click', (e) => {
             e.preventDefault();
             var arr = document.querySelectorAll(".optionID");
             var answers = [];
             var i=0;
             arr.forEach(element => {
-                alert(element.innerHTML);
                 if(element.checked==true){
                     answers.push(i);
                 }
@@ -475,19 +485,36 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                  'qzid': '{{qzid}}',
-                 'qtypes': e.target.elements.qtypes.value, 
-                 'question': e.target.elements.question.value, 
-                 'duration': e.target.elements.duration.value, 
-                 'marks': e.target.elements.marks1.value, 
+                 'qexistence': '{{qexistence}}',
+                 'qnid': '{{qnid}}',
+                 'qtypes': document.getElementsByName('qtypes')[0].value, 
+                 'question': document.getElementsByName('question')[0].value, 
+                 'duration': document.getElementsByName('duration')[0].value, 
+                 'marks': document.getElementsByName('marks1')[0].value, 
                  'fromprecision' : fromprecision,
                  'toprecision': toprecision,
-                 'feedback': e.target.elements.feedback.value, 
+                 'feedback': document.getElementsByName('feedback')[0].value, 
                  'options': options,
                  'answers': answers
                 })
     			}).then(async (resp)=> {
-                    document.querySelector("#questionForm").submit();
+                    let respBody = await resp.json();
+				    let msg = respBody.qnid;
+                    console.log(msg);
+                    document.getElementById('submitForm').innerHTML+='<input type="hidden" name="qnid" value="'+msg+'">';
+                   document.getElementById('submitForm').submit();
             });
+            
+        });
+        const createButton = document.getElementById("create");
+        createButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('createForm').submit();
+        });
+        const deleteButton = document.getElementById("delete");
+        deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('deleteForm').submit();
         });
     </script>
 </body>

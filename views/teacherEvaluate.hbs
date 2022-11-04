@@ -1,0 +1,448 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		body {
+			margin: 0px;
+		}
+
+		#right_panel {
+			display: none;
+			border-left: 2px solid black;
+			border-bottom: 2px solid black;
+			background-color: white;
+			width: 20.4%;
+			float: right;
+			height: 75%;
+			z-index: 2;
+		}
+
+		#evaluation_panel {
+			display: none;
+			border-left: 2px solid black;
+			border-bottom: 2px solid black;
+			background-color: white;
+			width: 29%;
+			float: right;
+			height: 75%;
+			z-index: 2;
+		}
+
+		#questions_panel {
+			!display: none;
+			grid-template-columns: auto auto auto;
+			column-gap: 10%;
+			row-gap: 5%;
+			z-index: 3;
+			margin-top: 8px;
+			padding: 5px;
+		}
+
+		.qn_button {
+			background-color: #e9e9e9;
+			border: 1px solid grey;
+			padding: 15px;
+			margin: 4px;
+			border-radius: 10px 0px 0px 0px;
+			text-align: center;
+			height: 85%;
+			width: 85%;
+			cursor: pointer;
+			box-shadow: 5px 5px 5px lightgrey;
+		}
+
+		.qn_button:hover {
+			font-size: 17px;
+			margin: 0px;
+			box-shadow: 7px 7px 5px lightgrey;
+		}
+
+		#navbar {
+			display: flex;
+			flex-direction: row-reverse;
+			background-color: #d6d6ef;
+			border-bottom: 1px solid black;
+			background-color: #dccae0;
+			height: clamp(55px, 10vh, 55px);
+
+		}
+
+		#question-nav {
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+			border-bottom: 1px solid black;
+			height: clamp(55px, 10vh, 55px);
+
+		}
+
+		.navbar_items {
+			margin: 10px;
+			border-radius: 25px;
+			border: 1px solid #3333cc;
+			color: #3333cc;
+			cursor: pointer;
+		}
+
+		.navbar_items:hover {
+			background-color: #3333cc;
+			font-size: 16px;
+			color: white;
+		}
+
+		#app_header {
+			background-color: #d6d6f5;
+			color: #3333cc;
+			height: clamp(45px, 9vh, 55px);
+			text-transform: uppercase;
+			font-size: 20px;
+			letter-spacing: 2px;
+			text-align: center;
+			padding-top: 15px;
+			font-family: sans-serif;
+		}
+
+		#details {
+			background: rgba(175, 50, 80, 0.2);
+			color: black;
+			height: clamp(35px, 8vh, 35px);
+			font-size: 17px;
+			padding-top: 15px;
+			padding-left: 3%;
+			margin: 0px;
+			font-family: sans-serif;
+		}
+
+		#main_area {
+			height: 75%;
+			width: 100%;
+			float: left;
+			z-index: 1;
+		}
+
+		#question_type_area {
+			padding: 10px;
+			border-bottom: 1px solid black;
+		}
+
+		#question_description {
+			padding: 20px;
+			height: 50%;
+		}
+
+		#start_time_panel {
+			text-align: center;
+			width: 4.5%;
+			display: inline;
+			background-color: white;
+			border: 2px solid black;
+			margin-right: 2%;
+			margin-left: 1%;
+		}
+
+		#end_time_panel {
+			text-align: center;
+			width: 5%;
+			display: inline;
+			background-color: white;
+			border: 2px solid black;
+		}
+
+		#allotted_time_panel {
+			text-align: center;
+			border-bottom: 2px solid black;
+		}
+
+		#action_area {
+			padding: 10px;
+			display: flex;
+			border-top: 2px solid black;
+			float: down;
+			gap: 10px;
+			z-index: 1;
+		}
+
+		#action_items {}
+
+		.textbox {
+			padding: 3%;
+		}
+
+		#edit {
+			margin-right: 10%;
+			cursor: pointer;
+		}
+
+		#update_button {
+			cursor: pointer;
+		}
+
+		.marks_panel {
+			padding: 2%;
+		}
+
+		#response_panel {
+			display: none;
+			padding-top: 1%;
+			background-color: #dccae0;
+			height: 33%;
+			z-index: 1.5;
+		}
+
+		#response_area {
+			margin-left: 0.5%;
+			margin-top: 1%;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="app_header">
+		Pariksha-NITC
+	</div>
+
+	<div id="details">
+		Quiz: {{quizid}}
+	</div>
+
+	<nav id="question-nav">
+		<button id="prev-question" class="navbar_items">
+			< Previous Question</button>
+				<button id="next-question" class="navbar_items">Next Question ></button>
+	</nav>
+
+	<nav id="navbar">
+		<button id="right-panel-toggler" class="navbar_items">Qns Panel</button>
+		<button id="show-instructions" class="navbar_items">Instructions</button>
+		<button id="eval-panel-toggler" class="navbar_items">Eval. Panel</button>
+		<button id="response-panel-toggler" class="navbar_items">Resp. Panel</button>
+	</nav>
+
+	<div id="main_area">
+		<div id="question_type_area">Question type: {{question.type}}</div>
+		<!--div style="border-bottom:12 px solid black;"-->
+		<div id="question_description"
+			style="background-color: rgba(175, 0, 0, 0.3);border:10 px solid black;background-color:white;">Question
+			{{qnNumber}}<br><br>
+			{{question.question}}
+			<form id="question_form" method="post" action="/student/navigate">
+				<input type="hidden" name="qzcode" value="{{qzcode}}">
+			</form>
+			{{#ife question.type 'mcq'}}
+			{{#each question.options}}
+			<p><input type="radio" name="ans" value="{{@index}}" {{#if ../ans}}{{#ife @index ../ans}}checked="true"
+					{{else}}disabled{{/ife}}{{else}}disabled{{/if}}>{{.}}</p>
+			{{/each}}
+			{{/ife}}
+			{{#ife question.type 'msq'}}
+			{{#each question.options}}
+			<p><input type="checkbox" name="ans" value="{{@index}}" {{#if ../ans}}{{#in @index ../ans}}checked="true"
+					{{else}}disabled{{/in}}{{else}}disabled{{/if}}>{{.}}</p>
+			{{/each}}
+			{{/ife}}
+
+		</div>
+		<div id="action_area">
+			<button class="action_items" id="prev-response">Previous Response</button><input type="hidden" name="toQnum"
+				value="{{#dec}}{{respNumber}}{{/dec}}">
+			<button class="action_items" id="next-response">Next Response</button><input type="hidden" name="toQnum"
+				value="{{#inc}}{{respNumber}}{{/inc}}">
+		</div>
+		<div id="response_panel">
+			{{!-- <div id="start_time_panel">
+				<div style="background-color:c6e2ff;display:inline;border-right:1px solid black;">
+					Start time
+				</div>
+				00:00:00
+			</div>
+
+			<div id="end_time_panel">
+				<div style="background-color:c6e2ff;display:inline;border-right:1px solid black;">
+					End time
+				</div>
+				00:01:00
+			</div>
+			--}}
+			<div id="response_area">
+				{{#ife question.type 'subjective'}}
+				<div style="margin-top:0.5%;0%;letter-spacing:1px;">Student's response</div>
+				<textarea name="ans" disabled rows="7" cols="135"
+					style="margin-bottom:5%;padding:0.5%;background-color:white;">{{#if ans}}{{ans}}{{/if}}</textarea>
+				{{else}}
+				<div style="margin-top:0.5%;0%;letter-spacing:1px;">Student's comments</div>
+				<textarea name="comment" disabled rows="7" cols="135"
+					style="margin-bottom:5%;padding:0.5%;background-color:white;"></textarea>
+				{{/ife}}
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<div id="evaluation_panel">
+
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;">Marked As</div>
+		<form method="post" style="display:inline;" id="evaluation-form">
+
+			<div class="marks_panel">
+				<input type="checkbox" id="mark-correct" unchecked disabled>Correct
+				<i class="fa fa-edit" id="mark-correct-edit"></i>
+			</div>
+
+			<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Marks
+				awarded</div>
+			<div class="marks_panel">
+				<input type="text" id="marks-update" value="100" required disabled>
+				<i class="fa fa-edit" id="marks-update-edit"></i>
+			</div>
+
+			<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Feedback
+				section</div>
+			<div class="textbox">
+				<textarea placeholder="Give your feedback" rows="7" cols="50" name="feedback" id="evaluation-feedback"></textarea>
+			</div>
+		</form>
+
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Candidate
+			Comments</div>
+		<div class="textbox">
+			<textarea rows="7" cols="50" disabled></textarea>
+		</div>
+		<div>
+			<button style="margin:2ch" id="submit-evaluation-button">Submit Evaluation</button>
+		</div>
+	</div>
+
+	<div id="right_panel">
+		<div id="allotted_time_panel">
+			<div style="background-color:c6e2ff;border-bottom:1px solid black;">Allotted time</div>
+			00:00:00
+		</div>
+		<br><br>
+		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
+		<div id="questions_panel">{{#loop numiter}}
+			<button class="qn_button">{{#inc}}{{this}}{{/inc}}</button>
+			{{/loop}}
+		</div>
+
+	</div>
+
+	</div>
+
+	<script>
+		let respNo = {{ respNumber }};
+		let quesNo = {{ qnNumber }};
+		let quizId = {{ quizid }}
+		document.querySelector('#right-panel-toggler').addEventListener('click', () => {
+			if (document.getElementById("right_panel").style.display == "inline") {
+				document.getElementById("right_panel").style.display = "none";
+				document.getElementById("questions_panel").style.display = "grid";
+				document.getElementById("main_area").style.width = "100%";
+			}
+			else {
+				document.getElementById("evaluation_panel").style.display = "none";
+				document.getElementById("right_panel").style.display = "inline";
+				document.getElementById("questions_panel").style.display = "grid";
+				document.getElementById("main_area").style.width = "79.25%";
+			}
+		});
+
+		document.querySelector('#eval-panel-toggler').addEventListener('click', () => {
+			if (document.getElementById("evaluation_panel").style.display == "inline") {
+				document.getElementById("evaluation_panel").style.display = "none";
+				document.getElementById("questions_panel").style.display = "grid";
+				document.getElementById("main_area").style.width = "100%";
+			}
+			else {
+				document.getElementById("evaluation_panel").style.display = "inline";
+				document.getElementById("right_panel").style.display = "none";
+				document.getElementById("questions_panel").style.display = "grid";
+				document.getElementById("main_area").style.width = "70%";
+			}
+		});
+
+		document.querySelector('#response-panel-toggler').addEventListener('click', () => {
+			if (document.getElementById("response_panel").style.display == "block") {
+				document.getElementById("response_panel").style.display = "none";
+			}
+			else {
+				document.getElementById("response_panel").style.display = "block";
+			}
+		});
+
+		document.querySelector('#show-instructions').addEventListener('click', () => {
+			alert('Instructions');
+		});
+
+		document.querySelector('#prev-response').addEventListener('click', (e) => {
+			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo - 1}`;
+		});
+
+		document.querySelector('#next-response').addEventListener('click', (e) => {
+			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo + 1}`;
+		});
+
+		document.querySelector('#prev-question').addEventListener('click', (e) => {
+			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=1`;
+		});
+
+		document.querySelector('#next-question').addEventListener('click', (e) => {
+			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo + 1}&respno=1`;
+		});
+
+		document.querySelectorAll('.qn_button').forEach((btn, idx) => {
+
+			btn.addEventListener('click', (e) => {
+				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${idx + 1}&respno=1`;
+			})
+		});
+
+		function enableCorrectEdit() {
+			document.getElementById("marks_inp").disabled = false;
+			document.getElementById("marks_inp").required = true;
+			document.getElementById("update_button").disabled = false;
+		}
+
+		function enableCorrectEdit() {
+			document.getElementById("marks_inp").disabled = false;
+			document.getElementById("marks_inp").required = true;
+			document.getElementById("update_button").disabled = false;
+		}
+
+		document.querySelector('#mark-correct-edit').addEventListener('click', ()=>{
+			document.querySelector('#mark-correct').disabled=false;
+		});
+
+		document.querySelector('#marks-update-edit').addEventListener('click', ()=>{
+			document.querySelector('#marks-update').disabled=false;
+		});
+
+
+		document.querySelector('#submit-evaluation-button').addEventListener('click', ()=>{
+			let evalForm = document.querySelector('#evaluation-form');
+			let feedback = evalForm.querySelector("#evaluation-feedback").value;
+			let marks = evalForm.querySelector("#marks-update").value;
+			let correct = evalForm.querySelector("#mark-correct").checked;
+			fetch('/teacher/evaluatequestions', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({'feedback': feedback, 'marks': marks, 'correct': correct, 'respno': respNo, 'quesno': quesNo, 'quizid':quizId})
+			}).then(async (resp)=> {
+				if (resp.status === 400) {
+        			alert(`Something went wrong`);
+				}
+				else {
+        			alert(`Evaluation saved successfully`);
+				}
+			}).catch((err)=>{
+				console.error(err);
+			});
+		})
+	</script>
+
+</body>
+
+</html>
