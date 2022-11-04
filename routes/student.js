@@ -69,11 +69,11 @@ router.post('/viewQuiz', studentProtected, async(req,res) =>{
 router.post('/initiateAttempt',async(req,res) => {
 	let qzcode = req.body.qzcode;
 	req.session.qzcode = qzcode;
-	
+
 	// check attempt status
 	let statusRes = await db.one("SELECT status FROM studentquiz WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 	if (statusRes.status === 'attempted')
-	return res.status(400).send('cannot reattempt');
+		return res.status(400).send('cannot reattempt');
 	else if (statusRes.status !== 'attempting') {
 		await db.none("UPDATE studentquiz SET status='attempting' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 		req.session.startTime = Date.now();
@@ -116,16 +116,24 @@ router.post('/initiateAttempt',async(req,res) => {
 })
 
 router.post('/saveAndNavigate',checkTime,async(req,res) => {
-	console.log(req.body);
+	// console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
 	let question = req.session.question;
 
 	let difference = Date.now() - req.session.startQuestTime;
 
-	let duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
-
-	duration = parseInt(duration.duration);
+	let duration;
+	try {
+		duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+	}
+	catch(e) {
+		duration = 0;
+	}
+	if (duration.duration === 'NaN')
+		duration = 0;
+	else
+		duration = parseInt(duration.duration);
 	console.log("hahahha",duration);
 	duration += difference;
 
@@ -149,7 +157,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 
 	if(responses.length != 0)
 	{
-		console.log(responses);
+		// console.log(responses);
 		//console.log("yes");
 		if(question.type == 'subjective')
 			await db.none('UPDATE response SET response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
@@ -213,7 +221,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 		}
 		else if(question.type == 'msq')
 			ans = responses[0].response;
-		console.log(ans);
+		// console.log(ans);
 		
 		res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber,ans:ans,
 			quizTime:req.session.quizDuration, timeNow:req.session.startTime});
@@ -227,7 +235,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	
 });
 router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
-	console.log(req.body);
+	// console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
 	let qnum = req.session.qnNumber;
 	let question = req.session.question;
@@ -235,9 +243,17 @@ router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 	
 	let difference = Date.now() - req.session.startQuestTime;
 
-	let duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
-
-	duration = duration.Duration;
+	let duration;
+	try {
+		duration = await db.one('SELECT Duration FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
+	}
+	catch(e) {
+		duration = 0;
+	}
+	if (duration.duration === 'NaN')
+		duration = 0;
+	else
+		duration = parseInt(duration.duration);
 	duration += difference;
 
 	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',

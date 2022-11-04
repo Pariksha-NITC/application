@@ -222,6 +222,13 @@
 			<td><form action="/teacher/viewQuestions" method="post" style="display:inline">
 				<input type="submit" value="View">
 			</form></td>
+			<td>
+				<button onclick="location.href='/teacher/evaluatequestions?quizid={{quizid}}'" style="display:inline">Evaluate</button>
+				{{!-- <form action="/teacher/evaluatequestions" method="get" >
+				<input type="hidden" name="quizid" value="{{quizid}}">
+				<input type="submit" value="Evaluate">
+			</form> --}}
+			</td>
 		</tr>
 	{{/each}}
 	</ul>

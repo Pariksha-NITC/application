@@ -83,4 +83,77 @@ router.post('/queryQuestions',teacherProtected,async (req,res) => {
 	});
 	console.log('hello2');
 })
+
+router.get('/evaluatequestions', teacherProtected, async (req,res) => {
+	if (req.query.quizid) {
+
+		let question,quesNo;
+		quizQuestions = await db.many('SELECT * FROM question WHERE quizid=$1 ORDER BY qnid', [req.query.quizid]);
+
+		if (req.query.quesno) {
+			if (req.query.quesno <= quizQuestions.length && req.query.quesno >= 1)
+				question = quizQuestions[req.query.quesno - 1]
+			else {
+				return res.status(400).json({'message': 'BADQNO'})
+			}
+			quesNo = req.query.quesno;
+		}
+		else {
+			question = quizQuestions[0];
+			quesNo = 1;
+		}
+		
+		let response, respNo;
+		if (req.query.studid){
+			response = await db.one('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.query.studid]);
+			respNo = (await db.one('SELECT COUNT(*) FROM response where qnid=$1 AND responseid<=$2', [question.qnid, response.responseid])).count;
+		}
+		else {
+			quesResponses = await db.many('SELECT * FROM response WHERE qnid=$1 ORDER BY responseid',[question.qnid]);
+			if (req.query.respno){
+				respNo = req.query.respno;
+				if (req.query.respno <= quesResponses.length && req.query.respno >= 1)
+					response = quesResponses[req.query.respno - 1]
+				else {
+					return res.status(400).json({'message': 'BADRNO'})
+				}
+			}
+			else {
+				response = quesResponses[0];
+				respNo = 1;
+			}
+		}
+		console.log(respNo);
+		let ans;
+		if(question.type == 'subjective'){
+			if((response.response).length != 0)
+				ans = (response.response)[0];
+			else
+				ans = null;	
+		}
+		else if(question.type == 'mcq')
+		{
+			if((response.response).length != 0)
+				ans = String((response.response)[0]);
+			else
+				ans = null;
+		}
+		else if(question.type == 'msq')
+			ans = response.response;
+
+		console.log(ans);
+		return res.render('teacherEvaluate',{quizid:req.query.quizid,numiter:quizQuestions.length,question:question,qnNumber:quesNo, respNumber: respNo,ans:ans});
+	}
+	// else{
+	// 	res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null});		
+	// }
+});
+
+router.post('/evaluatequestions', teacherProtected, async (req, res, next) => {
+	console.log(req.body);
+	let marks = 
+	res.status(200).json({'message':'OK'});
+});
+
+
 module.exports = router
