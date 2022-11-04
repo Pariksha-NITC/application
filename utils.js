@@ -36,6 +36,17 @@ function checkTime(req, res, next){
 
 
 }
+
+async function checkAttemptStatus(req, res, next) {
+	// check attempt status
+	let statusRes = await db.one("SELECT status FROM studentquiz WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
+	if (statusRes.status === 'attempted')
+	    return res.status(400).send('cannot reattempt');
+	else 
+        next();
+}
+
+
 class Time{
     hour;
     minute;
@@ -91,5 +102,6 @@ module.exports= {
     multipleProtected: multipleProtected,
     timer: timer,
     beautifyTime: beautifyTime,
-    checkTime: checkTime
+    checkTime: checkTime,
+    checkAttemptStatus: checkAttemptStatus
 }

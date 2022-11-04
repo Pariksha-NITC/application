@@ -61,7 +61,16 @@ router.post('/viewQuiz', studentProtected, async(req,res) =>{
 router.post('/initiateAttempt',async(req,res) => {
 	let qzcode = req.body.qzcode;
 	req.session.qzcode = qzcode;
-	await db.none("UPDATE studentquiz SET status='attempting' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
+	
+	// check attempt status
+	let statusRes = await db.one("SELECT status FROM studentquiz WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
+	if (statusRes.status === 'attempted')
+	return res.status(400).send('cannot reattempt');
+	else if (statusRes.status !== 'attempting') {
+		await db.none("UPDATE studentquiz SET status='attempting' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
+		req.session.startTime = Date.now();
+	}
+
 	//let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[qzcode]);
 	if(!questions || questions.length==0)
@@ -84,7 +93,6 @@ router.post('/initiateAttempt',async(req,res) => {
 	req.session.question=question;
 	console.log(qnNumberArr);
 	console.log(req.session.quizDuration);
-	req.session.startTime = Date.now();
 	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber, 
 		quizTime:req.session.quizDuration, timeNow:req.session.startTime});
 	//res.send("Successfully attempted");
@@ -93,6 +101,7 @@ router.post('/initiateAttempt',async(req,res) => {
 	
 
 })
+
 router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;
@@ -199,28 +208,33 @@ router.post('/saveAndEnd',async(req,res) => {
 	let responses = await db.any('SELECT * FROM response WHERE qnid=$1 AND studentid=$2',[question.qnid,req.session.userID]);
 	if(responses.length != 0)
 	{
+		console.log(responses);
+		//console.log("yes");
 		if(question.type == 'subjective')
-			await db.none('UPDATE response SET response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response SET response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		else if(question.type == 'mcq')
-			await db.none('UPDATE response set options=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response set response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		else if(question.type == 'msq')
-			await db.none('UPDATE response set options=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 	}
 	else
 	{
 		if(question.type == 'subjective')
 		{
-			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		}
 		else if(question.type == 'mcq')
 		{
-			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			//console.log(typeof req.body.ans);
+			//console.log(req.body.ans);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,ARRAY[$3])',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		}
 		else if(question.type == 'msq')
 		{
-			await db.none('INSERT INTO response(qnid,studentid,options) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+			await db.none('INSERT INTO response(qnid,studentid,response) VALUES ($1,$2,$3)',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 
 		}
+		/*console.log("no");*/
 	}
 	await db.none("UPDATE studentquiz SET status='attempted' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 	//res.send("Attempt has been recorded");
@@ -230,6 +244,7 @@ router.post('/saveAndEnd',async(req,res) => {
 	quizDetails.instructor = instructor.name;
 	res.render('reviewHome',{quiz:quizDetails});
 });
+
 router.post('/navigate',async(req,res) => {
 	console.log(req.body);
 	let qzcode = req.body.qzcode;
