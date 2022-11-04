@@ -24,7 +24,7 @@ router.post('/', async (req,res) => {
 		else
 			await db.none('INSERT INTO userdetails(userid,name,role) VALUES ($1,$2,$3)', [userID,name,role]);
 		console.log('User successfully added');
-		res.send("You have successfully registered");
+		res.render("login");
 	}
 	catch(e) {
 		if (e instanceof QueryResultError && e.code === qrec.notEmpty)
