@@ -92,31 +92,52 @@
 	<div style="letter-spacing:2px;margin-top:2%;font-size:18px;padding-left:30%;margin-bottom:0%;margin-left:1%">
 		Registration Form</div>
 	<div id="form">
-		<form action="/register" method="post">
+		<form action="/register" method="post" id="user_form">
 			<div class="row">
 				<div class="label">UserID:</div>
-				<div class="input"><input type="text" name="uid" placeholder="Enter a UserID"></div><br><br>
+				<div class="input"><input type="text" name="uid" placeholder="Enter a UserID" required></div><br><br>
 			</div>
 			<div class="row">
 				<div class="label">Name:</div>
-				<div class="input"><input type="text" name="name" placeholder="Enter your name"></div><br><br>
+				<div class="input"><input type="text" name="name" placeholder="Enter your name" required></div><br><br>
 			</div>
 			<div class="row">
 				<div class="label">Password:</div>
-				<div class="input"><input type="password" name="pwd" placeholder="Create your password"></div><br><br>
+				<div class="input" id="pwdp"><input type="password" id="pwd" name="pwd" placeholder="Create your password" required></div><br><br>
 			</div>
 			<div class="row">
 				<div class="label">Confirm Password:</div>
-				<div class="input"><input type="password" placeholder="Re-enter your password"></div><br><br>
+				<div class="input" id="cpwdp"><input type="password" id="cpwd" placeholder="Re-enter your password" required></div><br><br>
 			</div>
 			<div style="padding-left:35%;padding-top:0%;">
 				<select name="role" style="border-radius:5px;">
 					<option value="student">Student</option>
 					<option value="teacher">Teacher</option>
 					<option value="ta">TA</option>
-				</select><br><br>
-				<input type="submit" value="Submit" style="border-radius:20px;cursor:pointer;">
+				</select>
+				
 			</div>
 		</form>
+		<button style="border-radius:20px;cursor:pointer;margin-left:35%;" onclick="validate();">Submit</button>
 	</div>
+	<script>
+		function validate()
+		{
+			pwd=document.getElementById("pwd").value;
+			cpwd=document.getElementById("cpwd").value;
+			if (pwd === cpwd)
+			{	
+				document.getElementById("user_form").submit();
+			}
+			else
+			{
+				alert("Password and confirm password not matching");
+				pwdp = document.getElementById("pwdp");
+				cpwdp = document.getElementById("cpwdp");
+				pwdp.innerHTML='<input type="password" id="pwd" name="pwd" placeholder="Create your password" required>';
+				cpwdp.innerHTML='<input type="password" id="cpwd" placeholder="Re-enter your password" required>';
+				return false;
+			}
+		}
+	</script>
 </body>
