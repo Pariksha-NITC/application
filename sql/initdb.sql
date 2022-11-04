@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS quiz (
 CREATE TABLE IF NOT EXISTS question (
     QnId SERIAL PRIMARY KEY UNIQUE,
     QuizId SERIAL,
+    Question VARCHAR,
     Duration VARCHAR,
     Type VARCHAR,
     Marks VARCHAR,

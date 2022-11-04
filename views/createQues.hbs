@@ -13,7 +13,7 @@
         var y = `
         <div id="options">
             <div id="optionsSoFar"></div>
-            <textarea name="option" cols="100" rows="2" id="option" type="button" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('single')">Create Option</button>
+            <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('single')">Create Option</button>
         </div>
         <div id="limits">
             <p>Duration : <input name="duration" type="text"> minutes </p>
@@ -24,7 +24,7 @@
         var t = `
         <div id="options">
             <div id="optionsSoFar"></div>
-            <textarea name="option" cols="100" rows="2" id="option" type="button" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" onclick="createOption('multi')">Create Option</button>
+            <textarea name="option" cols="100" rows="2" id="option" placeholder="Type in Option ..."></textarea><button style="border-radius:5px;width:max-content;height: fit-content;" type="button" onclick="createOption('multi')">Create Option</button>
         </div>
         <div id="limits">
             <p>Duration : <input name="duration" type="text"> minutes </p>
@@ -192,9 +192,8 @@
 
         #right_panel {
             display: none;
-            border-left: 2px solid black;
-            border-bottom: 2px solid black;
-            background-color: white;
+            
+            background-color: #dccae0;
             width: 20.4%;
             float: right;
             height: 75%;
@@ -203,57 +202,63 @@
 
         #evaluation_panel {
             display: inline;
-            border-left: 2px solid black;
-            border-bottom: 2px solid black;
-            background-color: white;
+            background-color:#dccae0;
             width: 29%;
             float: right;
             height: 75%;
             z-index: 2;
+            overflow:auto;
         }
 
-        #questions_panel {
-            display: none;
+        #questions_panel{
+            display: grid;
             grid-template-columns: auto auto auto;
-            column-gap: 10%;
-            row-gap: 5%;
+            column-gap:8%;
+            row-gap:2%;
+            background-color:#ecb6f8;
+            align-content:center;
+            height:30%;
             z-index: 3;
-            background-color: white;
-            align-content: center;
-            height: 30%;
-            margin-top: 8px;
-            padding: 5px;
+            padding:5px;
+            padding-bottom:10%;
+            overflow:auto;
         }
 
-        .qn_button {
-            background-color: #e9e9e9;
-            border: 1px solid grey;
-            padding: 20px;
-            margin: 4px;
-            border-radius: 10px 0px 0px 0px;
-            text-align: center;
-            height: 85%;
-            width: 85%;
-            cursor: pointer;
-            box-shadow: 5px 5px 5px lightgrey;
+        .qn_button{
+            background-color:#e9e9e9;
+            flex: 0 1 21%;
+            border : 1px solid grey;
+            padding:20px;
+            margin:4px;
+            border-radius:10px 0px 0px 0px;
+            text-align:center;
+            height:85%;
+            width:85%;
+            cursor:pointer;
+            box-shadow : 5px 5px 5px lightgrey;
         }
-
-        .qn_button:hover {
-            transition-duration: 0.05s;
-            font-size: 17px;
-            margin: 0px;
-            background-color: #f1f1e7;
-            box-shadow: 7px 7px 5px lightgrey;
+        .qn_button:hover{
+            transition-duration:0.05s;
+    	    font-size:17px;
+            margin:0px;
+            background-color:#f1f1e7;
+            box-shadow : 7px 7px 5px lightgrey;
         }
-
         #palname {
             padding: 5%;
             border-radius: 5%;
         }
+        #main_area{
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            text-align:justify;
+            
+        }
     </style>
 </head>
 
-<body>
+<body style="background-color:#dccae0">
 
     <nav class="nav-bar">
         <div class="title">
@@ -273,11 +278,11 @@
     </nav>
 
     <div id="evaluation_panel" style="display:inline;">
-
+        <input type="hidden" name="qzid" value="{{qzid}}">
         <form action="/teacher/addQuizDetails" method="post">
             <div class="row" style="padding:4%">
                 <div class="label">Quiz Title</div>
-                <div class="input"><input type="text" name="qtitle" value="{{qtitle}}"></div>
+                <div class="input" ><input type="text" name="qtitle" value="{{qtitle}}"></div>
             </div>
             <div class="row" style="padding:4%">
                 <div class="label">Duration</div>
@@ -304,13 +309,13 @@
 
     </div>
     <div id="right_panel">
-        <div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
+        <div style="background-color:#e8c6ff;;text-align:center;">Questions Palette</div>
         <div id="questions_panel">{{#each questions}}<button class="qn_button"
                 onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="toQnum"
                 value="{{@index}}">{{/each}}</div>
     </div>
     <div id="main_area">
-        <form id="questionForm" method="post">
+        <form id="questionForm" action="/teacher/makeQuestions" method="post">
             <div id="details">
                 {{quizname}}
                 <div id="questionType" style="margin-top:1%">
@@ -342,13 +347,16 @@
                 </div>
             </div>
             <div id="action_area">
-                <input type="hidden" name="gurla" value="j">
-                <button type="submit" class="action_items">Save and Previous</button>
-                <button type="submit" class="action_items">Save and Next</button>
-                <button type="submit" class="action_items">Delete Question</button>
+                <input type="hidden" name="qzid" value="{{qzid}}">
+                <button class = "action_items" onclick="addToForm(this)">Save and Previous</button><input type="hidden" name="toQnum" value="{{#dec}}{{currentQnNumber}}{{/dec}}">
+			    <button class = "action_items" onclick="addToForm(this)">Save and Next</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">
+			    <button class = "action_items" >Delete Question</button><input type="hidden" name="toQnum" value="{{#inc}}{{currentQnNumber}}{{/inc}}">	
             </div>
         </form>
     </div>
+    <form id="submitForm" action="/teacher/makeQuestions" method="POST">
+        <input type="hidden" name="qzid" value="{{qzid}}">
+    </form>
     <script>
         toggleEvalPanel();
         function addToForm(node) {
@@ -390,7 +398,7 @@
             var fromprecision=document.getElementsByName('fromprecision')[0] == null ? "null" : document.getElementsByName('fromprecision')[0].value ;
             var toprecision=document.getElementsByName('toprecision')[0] == null ? "null" : document.getElementsByName('toprecision')[0].value ;
             
-            fetch('/teacher/makeQuestions', {
+            fetch('/teacher/createQues', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -405,6 +413,8 @@
                  'options': options,
                  'answers': answers
                 })
+    			}).then(async (resp)=> {
+                    document.querySelector("#questionForm").submit();
             });
         });
     </script>

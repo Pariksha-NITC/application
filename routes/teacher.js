@@ -28,27 +28,22 @@ router.post('/addQuizDetails', teacherProtected,async(req,res) => {
 	let marks = req.body.marks;
 	let passkey = req.body.passkey;
 	let instructions = req.body.instructions;
+	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	if(req.body.qzid != null){
 		await db.none('UPDATE quiz SET quizname=$1,duration=$2,totalmarks=$3,passkey=$4,instructions=$5 WHERE quizid=$6',[qtitle,duration,marks,passkey,instructions,req.body.qzid]);
-		res.render('createQues',{qzid:req.body.qzid,qtitle:qtitle,duration:duration,marks:marks,passkey:passkey,instructions:instructions});
+		res.render('createQues',{questions:questions,qzid:req.body.qzid,qtitle:qtitle,duration:duration,marks:marks,passkey:passkey,instructions:instructions});
 	}
 	else{
 		let x=await db.any('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,teacherid) VALUES ($1,$2,$3,$4,$5,$6) RETURNING quizid', [qtitle,duration,marks,passkey,instructions,req.session.userID]);
-		res.render('createQues',{qzid:x['quizid'],qtitle:qtitle,duration:duration,marks:marks,passkey:passkey,instructions:instructions});
+		res.render('createQues',{questions:questions,qzid:x[0]['quizid'],qtitle:qtitle,duration:duration,marks:marks,passkey:passkey,instructions:instructions});
 	}	
 })
 
 router.post('/makeQuestions', teacherProtected,async (req,res) => {
-	if(req.body.qtypes != null){
-		let x=await db.any('INSERT  INTO question(quizid,duration,type,marks,feedback,fromprecision,toprecision,answers,options) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[req.body.qzid,req.body.duration,req.body.qtypes,req.body.marks,req.body.feedback,req.body.fromprecision,req.body.toprecision,req.body.answers,req.body.options]);
-		x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
-		res.render('createQues',{qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
+	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
+	let x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	res.render('createQues',{questions:questions,qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
 	
-	}
-	else{
-		let x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
-		res.render('createQues',{qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
-	}
 })
 
 router.post('/evaluate',async (req,res) => {
@@ -57,4 +52,10 @@ router.post('/evaluate',async (req,res) => {
 	//evaluate('qwert');
 })
 
+router.post('/createQues',teacherProtected,async (req,res) => {
+	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
+	let x=await db.any('INSERT  INTO question(quizid,duration,type,marks,feedback,fromprecision,toprecision,question,answers,options) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',[req.body.qzid,req.body.duration,req.body.qtypes,req.body.marks,req.body.feedback,req.body.fromprecision,req.body.toprecision,req.body.question,req.body.answers,req.body.options]);
+	x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	res.render('createQues',{questions:questions,qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
+})
 module.exports = router
