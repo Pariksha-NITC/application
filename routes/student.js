@@ -82,7 +82,8 @@ router.post('/initiateAttempt',async(req,res) => {
 	req.session.qnNumberArr=new Array(questions.length);
 	req.session.qnNumber=0;
 	req.session.quizDuration = quizTime.duration;
-	console.log(req.session.quizDuration);req.session.marks=0;
+	// console.log(req.session.quizDuration);
+	req.session.marks=0;
 	//req.session.qzcode = qzcode;
 	let qnNumberArr = req.session.qnNumberArr;
 	for(let i = 0;i<questions.length;i++)
