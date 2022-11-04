@@ -214,6 +214,7 @@
 	</nav>
 
 	<nav id="navbar">
+		<button id="exit-eval" style="width: 10ch;" class="navbar_items">Exit</button>
 		<button id="right-panel-toggler" class="navbar_items">Qns Panel</button>
 		<button id="show-instructions" class="navbar_items">Instructions</button>
 		<button id="eval-panel-toggler" class="navbar_items">Eval. Panel</button>
@@ -273,7 +274,7 @@
 				{{else}}
 				<div style="margin-top:0.5%;0%;letter-spacing:1px;">Student's comments</div>
 				<textarea name="comment" disabled rows="7" cols="135"
-					style="margin-bottom:5%;padding:0.5%;background-color:white;"></textarea>
+					style="margin-bottom:5%;padding:0.5%;background-color:white;">{{#if comment}}{{comment}}{{/if}}</textarea>
 				{{/ife}}
 			</div>
 
@@ -288,28 +289,33 @@
 		<form method="post" style="display:inline;" id="evaluation-form">
 
 			<div class="marks_panel">
-				<input type="checkbox" id="mark-correct" unchecked disabled>Correct
+				{{#if marks}}
+					<input type="checkbox" id="mark-correct" checked="{{#ife marks 0}}false{{else}}true{{/ife}}" disabled>Correct
+				{{else}}
+					<input type="checkbox" id="mark-correct" unchecked disabled>Correct
+				{{/if}}
 				<i class="fa fa-edit" id="mark-correct-edit"></i>
 			</div>
 
 			<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Marks
 				awarded</div>
 			<div class="marks_panel">
-				<input type="text" id="marks-update" value="100" required disabled>
+				<input type="text" id="marks-update" value="{{#if marks}}{{marks}}{{else}}0{{/if}}" required disabled>
 				<i class="fa fa-edit" id="marks-update-edit"></i>
+				<span style="font-style: italic; margin-left: 3ch;">out of {{question.marks}}</span>
 			</div>
 
 			<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Feedback
 				section</div>
 			<div class="textbox">
-				<textarea placeholder="Give your feedback" rows="7" cols="50" name="feedback" id="evaluation-feedback"></textarea>
+				<textarea placeholder="Give your feedback" rows="7" cols="50" name="feedback" id="evaluation-feedback">{{#if feedback}}{{feedback}}{{/if}}</textarea>
 			</div>
 		</form>
 
-		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Candidate
+		<div style="background-color:c6e2ff;border-bottom:1px solid black;text-align:center;margin-top:7%;">Student's
 			Comments</div>
 		<div class="textbox">
-			<textarea rows="7" cols="50" disabled></textarea>
+			<textarea rows="7" cols="50" disabled>{{#if comment}}{{comment}}{{/if}}</textarea>
 		</div>
 		<div>
 			<button style="margin:2ch" id="submit-evaluation-button">Submit Evaluation</button>
@@ -323,7 +329,7 @@
 		</div>
 		<br><br>
 		<div style="background-color:#c6e2ff;border:1px solid black;text-align:center">Questions Palette</div>
-		<div id="questions_panel">{{#loop numiter}}
+		<div id="questions_panel">{{#loop numQuestions}}
 			<button class="qn_button">{{#inc}}{{this}}{{/inc}}</button>
 			{{/loop}}
 		</div>
@@ -336,6 +342,8 @@
 		let respNo = {{ respNumber }};
 		let quesNo = {{ qnNumber }};
 		let quizId = {{ quizid }}
+		let numQuestions = {{numQuestions}}
+		let numResponses = {{numResponses}}
 		document.querySelector('#right-panel-toggler').addEventListener('click', () => {
 			if (document.getElementById("right_panel").style.display == "inline") {
 				document.getElementById("right_panel").style.display = "none";
@@ -374,23 +382,52 @@
 		});
 
 		document.querySelector('#show-instructions').addEventListener('click', () => {
-			alert('Instructions');
+			alert('Quiz Instructions:\n\t{{instructions}}');
+		});
+
+		document.querySelector('#exit-eval').addEventListener('click', () => {
+			location.href = `/teacher/`;
 		});
 
 		document.querySelector('#prev-response').addEventListener('click', (e) => {
-			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo - 1}`;
+			if (respNo === 1) {
+				if (quesNo === 1)
+					location.href = `/teacher/`;
+
+				else
+					location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=1`;
+			}
+			else
+				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo - 1}`;
 		});
 
 		document.querySelector('#next-response').addEventListener('click', (e) => {
-			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo + 1}`;
+			if (respNo === numResponses) {
+				if (quesNo === numQuestions)
+					location.href = `/teacher/`;
+
+				else
+					location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo + 1}&respno=1`;
+			}
+
+			else
+				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo + 1}`;
 		});
 
 		document.querySelector('#prev-question').addEventListener('click', (e) => {
-			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=1`;
+			if (quesNo === 1)
+				location.href = `/teacher/`;
+
+			else
+				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=1`;
 		});
 
 		document.querySelector('#next-question').addEventListener('click', (e) => {
-			location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo + 1}&respno=1`;
+			if (quesNo === numQuestions)
+				location.href = `/teacher/`;
+
+			else
+				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo + 1}&respno=1`;
 		});
 
 		document.querySelectorAll('.qn_button').forEach((btn, idx) => {

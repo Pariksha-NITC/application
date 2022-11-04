@@ -150,7 +150,7 @@ router.post('/deleteQuestion',teacherProtected,async (req,res)=>{
 
 router.get('/evaluatequestions', teacherProtected, async (req,res) => {
 	if (req.query.quizid) {
-
+		let quiz = await db.one('SELECT * FROM quiz where quizid=$1', [req.query.quizid]);
 		let question,quesNo;
 		quizQuestions = await db.many('SELECT * FROM question WHERE quizid=$1 ORDER BY qnid', [req.query.quizid]);
 
@@ -187,7 +187,6 @@ router.get('/evaluatequestions', teacherProtected, async (req,res) => {
 				respNo = 1;
 			}
 		}
-		console.log(respNo);
 		let ans;
 		if(question.type == 'subjective'){
 			if((response.response).length != 0)
@@ -205,8 +204,7 @@ router.get('/evaluatequestions', teacherProtected, async (req,res) => {
 		else if(question.type == 'msq')
 			ans = response.response;
 
-		console.log(ans);
-		return res.render('teacherEvaluate',{quizid:req.query.quizid,numiter:quizQuestions.length,question:question,qnNumber:quesNo, respNumber: respNo,ans:ans});
+		return res.render('teacherEvaluate',{quizid:req.query.quizid,numQuestions:quizQuestions.length,question:question,qnNumber:quesNo, respNumber: respNo,ans:ans, marks:response.marksawarded, feedback: response.feedback, comment:response.comment, numResponses: quesResponses.length, instructions:quiz.instructions});
 	}
 	// else{
 	// 	res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null});		
@@ -214,9 +212,34 @@ router.get('/evaluatequestions', teacherProtected, async (req,res) => {
 });
 
 router.post('/evaluatequestions', teacherProtected, async (req, res, next) => {
-	console.log(req.body);
-	let marks = 
-	res.status(200).json({'message':'OK'});
+	let marks = parseInt(req.body.marks);
+	let feedback = req.body.feedback;
+	let correct = req.body.correct;
+	let quizid = req.body.quizid;
+	let quesno = req.body.quesno;
+	let respno = req.body.respno;
+	if (!correct)
+		marks = 0;
+	let stat = await db.tx(async t => {
+		const questionsList = await db.many('SELECT * from question where quizid=$1', [quizid]);
+		if (quesno < 1 || quesno > questionsList.length)
+			return {'message': 'BADQNO'};
+		const question = questionsList[quesno-1];
+
+		const respList = await db.many('SELECT * from response where qnid=$1', [question.qnid]);
+		if (respno < 1 || respno > respList.length)
+			return {'message': 'BADRNO'};
+		const response = respList[respno-1];
+		
+		await db.none('UPDATE response set marksawarded=$1, feedback=$2 where responseid=$3', [marks, feedback, response.responseid]);
+		return {'message': 'OK'}
+	});
+
+	if (stat.message === 'OK')
+		res.status(200).json(stat);
+
+	else
+		res.status(400).json(stat);
 });
 
 
