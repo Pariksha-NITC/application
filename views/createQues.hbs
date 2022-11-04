@@ -312,7 +312,7 @@
         <div style="background-color:#e8c6ff;;text-align:center;">Questions Palette</div>
         <div id="questions_panel">{{#each questions}}<button class="qn_button"
                 onclick="addToForm(this)">{{#inc}}{{@index}}{{/inc}}</button><input type="hidden" name="toQnum"
-                value="{{@index}}">{{/each}}</div>
+                value="{{qnid}}">{{/each}}</div>
     </div>
     <div id="main_area">
         <form id="questionForm" action="/teacher/makeQuestions" method="post">
@@ -321,10 +321,33 @@
                 <div id="questionType" style="margin-top:1%">
                     Select one of the following Types :
                     <select name="qtypes" style="border-radius:5px;" onchange="caterType(this)">
-                        <option value="schoice">Single Correct Choice Type</option>
-                        <option value="mchoice">Multi Correct Choice Type</option>
-                        <option value="subjective">Subjective Type</option>
-                        <option value="integer">Integer Type</option>
+                        {{#ife qexistence 'true' }}
+                            {{#ife type 'schoice'}}
+                                <option value="schoice" selected>Single Correct Choice Type</option>
+                            {{else}}
+                                <option value="schoice">Single Correct Choice Type</option>
+                            {{/ife}}
+                            {{#ife type 'mchoice'}}
+                                <option value="mchoice" selected>Multi Correct Choice Type</option>
+                            {{else}}
+                                <option value="mchoice">Multi Correct Choice Type</option>
+                            {{/ife}}
+                            {{#ife type 'subjective'}}
+                                <option value="subjective" selected>Subjective Type</option>
+                            {{else}}
+                                <option value="subjective">Subjective Type</option>
+                            {{/ife}}
+                            {{#ife type 'integer'}}
+                                <option value="integer" selected>Integer Type</option>
+                            {{else}}
+                                <option value="integer" >Integer Type</option>
+                            {{/ife}}
+                        {{else}}
+                            <option value="schoice">Single Correct Choice Type</option>
+                            <option value="mchoice">Multi Correct Choice Type</option>
+                            <option value="subjective">Subjective Type</option>
+                            <option value="integer">Integer Type</option>
+                        {{/ife}}
                     </select>
                 </div>
             </div>
@@ -354,13 +377,13 @@
             </div>
         </form>
     </div>
-    <form id="submitForm" action="/teacher/makeQuestions" method="POST">
-        <input type="hidden" name="qzid" value="{{qzid}}">
-    </form>
+    
     <script>
         toggleEvalPanel();
         function addToForm(node) {
-            let qform = document.getElementById("question_form");
+            let qform = var form = document.createElement("form");
+            var element1 = document.createElement("input"); 
+            var element2 = document.createElement("input");  
             //alert(qform);
             let navinp = node.nextSibling;
             //navinp.setAttribute("value",node.innerHTML);
@@ -397,7 +420,6 @@
             });
             var fromprecision=document.getElementsByName('fromprecision')[0] == null ? "null" : document.getElementsByName('fromprecision')[0].value ;
             var toprecision=document.getElementsByName('toprecision')[0] == null ? "null" : document.getElementsByName('toprecision')[0].value ;
-            
             fetch('/teacher/createQues', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

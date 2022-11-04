@@ -43,7 +43,7 @@ async function evaluate(qzcode)
                 else
                 {
                     let k;
-                    for(k = 0;i<(question.correctanswer).length;k++)
+                    for(k = 0;k<(question.correctanswer).length;k++)
                     {
                         if((response.response)[k] != question.correctanswer[k])
                         {
