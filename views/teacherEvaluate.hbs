@@ -194,6 +194,16 @@
 			margin-left: 0.5%;
 			margin-top: 1%;
 		}
+
+		.student-info {
+			margin: 10px;
+			padding: 5px;
+			margin-left: 0px;
+			border-radius: 25px;
+			border: 1px solid #3333cc;
+			color: #3333cc;
+		}
+
 	</style>
 </head>
 
@@ -222,6 +232,25 @@
 	</nav>
 
 	<div id="main_area">
+		<div id="question_type_area">
+			<span class="student-info">
+				<b>StudentID:</b> {{student.id}}
+			</span> 
+			<span class="student-info">
+				<b>Name:</b> {{student.name}}
+			</span>
+
+			<span class="student-info">
+				<b>Time taken:</b> 
+				{{#ifne duration.min 0}}
+				{{duration.min}} minutes 
+				{{/ifne}}
+				{{#ifne duration.sec 0}}
+				{{duration.sec}} seconds
+				{{/ifne}}
+			</span>
+		</div>
+
 		<div id="question_type_area">Question type: {{question.type}}</div>
 		<!--div style="border-bottom:12 px solid black;"-->
 		<div id="question_description"
@@ -395,7 +424,7 @@
 					location.href = `/teacher/`;
 
 				else
-					location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=1`;
+					location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo - 1}&respno=${numResponses}`;
 			}
 			else
 				location.href = `/teacher/evaluatequestions?quizid=${quizId}&quesno=${quesNo}&respno=${respNo - 1}`;

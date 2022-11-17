@@ -7,6 +7,12 @@ module.exports = {
     else
         return options.inverse(this);
     },
+    ifne : function(var1,var2,options){
+    if(var1 != var2)
+        return options.fn(this);
+    else
+        return options.inverse(this);
+    },
     inc : function(options){
         return String(parseInt(options.fn(this))+1);
     }, 

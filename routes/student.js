@@ -332,6 +332,10 @@ router.post('/navigate',async(req,res) => {
 	if(response && response.length != 0)
 	{
 		console.log(response[0]);
+
+		duration_minutes = Math.floor(response[0].duration/60000)
+		duration_seconds = Math.floor(response[0].duration/1000) -  duration_minutes*60
+
 		//console.log("yes");
 		let ans;
 		if(question.type == 'subjective')
@@ -351,11 +355,11 @@ router.post('/navigate',async(req,res) => {
 		else if(question.type == 'msq')
 			ans = response[0].response;
 		console.log(ans);
-		res.render('quizReview',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:ans});
+		res.render('quizReview',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:ans, duration:{min:duration_minutes, sec:duration_seconds}});
 	}
 	else
 	{
-		res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null});
+		res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null, duration:{min:duration_minutes, sec:duration_seconds}});
 		/*console.log("no");*/
 	}
 });

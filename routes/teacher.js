@@ -204,7 +204,25 @@ router.get('/evaluatequestions', teacherProtected, async (req,res) => {
 		else if(question.type == 'msq')
 			ans = response.response;
 
-		return res.render('teacherEvaluate',{quizid:req.query.quizid,numQuestions:quizQuestions.length,question:question,qnNumber:quesNo, respNumber: respNo,ans:ans, marks:response.marksawarded, feedback: response.feedback, comment:response.comment, numResponses: quesResponses.length, instructions:quiz.instructions});
+
+		student = await db.one("SELECT * FROM userdetails WHERE userid=$1", [response.studentid])
+
+		duration_minutes = Math.floor(response.duration/60000)
+		duration_seconds = Math.floor(response.duration/1000) -  duration_minutes*60
+
+		return res.render('teacherEvaluate',{
+			quizid:req.query.quizid,
+			numQuestions:quizQuestions.length,
+			question:question,qnNumber:quesNo,
+			respNumber: respNo,ans:ans,
+			marks:response.marksawarded,
+			feedback: response.feedback,
+			comment:response.comment,
+			numResponses: quesResponses.length,
+			instructions:quiz.instructions,
+			student: {id: student.userid, name: student.name}, 
+			duration: {min: duration_minutes, sec: duration_seconds}
+		});
 	}
 	// else{
 	// 	res.render('quizAttempt',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:null});		
