@@ -130,15 +130,19 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	catch(e) {
 		duration = 0;
 	}
-	if (duration.duration === 'NaN')
+	if (duration.duration == null)
 		duration = 0;
 	else
 		duration = parseInt(duration.duration);
-	console.log("hahahha",duration);
-	duration += difference;
 
-	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
-		[qnNumberArr[qnum],req.session.userID,duration]);
+	if(isNaN(duration))
+		duration = 0;
+	
+	console.log("hahahha",duration, difference);
+	duration += difference;
+	console.log("hahahha",duration, difference);
+
+	
 
 	//console.log(question.qnid);
 	//console.log(req.session.userID);
@@ -185,6 +189,8 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 		}
 		/*console.log("no");*/
 	}
+	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
+		[qnNumberArr[qnum],req.session.userID,duration]);
 	qnum = parseInt(req.body.toQnum);
 	if(qnum == -1)
 		qnum=0;
@@ -250,14 +256,11 @@ router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 	catch(e) {
 		duration = 0;
 	}
-	if (duration.duration === 'NaN')
+	if (duration.duration === null)
 		duration = 0;
 	else
 		duration = parseInt(duration.duration);
 	duration += difference;
-
-	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
-		[qnNumberArr[qnum],req.session.userID,duration]);
 
 
 
@@ -293,12 +296,17 @@ router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 		}
 		/*console.log("no");*/
 	}
+
+	await db.none('UPDATE response SET Duration=$3 WHERE qnid=$1 AND studentid=$2',
+		[qnNumberArr[qnum],req.session.userID,duration]);
+
 	await db.none("UPDATE studentquiz SET status='attempted' WHERE studentid=$1 AND quizid=$2",[req.session.userID,req.session.qzcode]);
 	//res.send("Attempt has been recorded");
 	//res.redirect(303,'/student');
 	const quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[question.quizid]);
 	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
 	quizDetails.instructor = instructor.name;
+	quizDetails.duration = Math.floor(quizDetails.duration / 60000);
 	res.render('reviewHome',{quiz:quizDetails});
 });
 

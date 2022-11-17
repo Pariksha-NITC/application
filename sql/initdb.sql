@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS response (
     Flag BOOLEAN,
     StartTime TIME,
     EndTime TIME,
+    Duration NUMERIC,
     CONSTRAINT fk_question
         FOREIGN KEY(QnId) 
             REFERENCES question(QnId)
