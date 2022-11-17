@@ -195,3 +195,12 @@ body {
     margin-top: 1.2%;
     background-color: rgba(0, 120, 120, 0.1);
 }
+
+.student-info {
+    margin: 10px;
+    padding: 5px;
+    margin-left: 0px;
+    border-radius: 25px;
+    border: 1px solid #3333cc;
+    color: #3333cc;
+}
