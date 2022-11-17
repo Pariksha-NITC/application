@@ -29,7 +29,17 @@
     width: 15%;
     min-width: 150px; 
     font-weight: bold;
-    height: 10%;
+    height: 75%;
     max-height: 8vh;
     cursor: pointer;
+}
+
+#button-register{
+    background-color: rgb(77, 38, 114);
+}
+
+.div-buttons{
+    align-items: center;
+    height: 150px;
+    display: flex;
 }

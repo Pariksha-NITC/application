@@ -1,0 +1,44 @@
+.heading1{
+	display: block;
+	top: 0;
+    font-size: 60px;
+	font-family: "Nunito";
+}
+
+.description{
+
+    font-size: 20px;
+	color: #3333cc5e;
+	display: inline;
+	font-style: italic;
+	margin-left: 5%;
+}
+
+
+
+.container {
+    width: 50%;
+	text-align: right;
+
+}
+
+.person-digging-icon {
+	width: 50%;
+	font-size: 10rem;
+	margin-left: 5%;
+}
+
+@media screen and (max-width:768px) {
+	.flexx {
+		flex-direction: column;
+	}
+	.container {
+		text-align: left;
+		width: 100%;
+	}
+	.person-digging-icon {
+		width: 100%;
+		text-align: right;
+		margin-right: 10%;
+	}
+}

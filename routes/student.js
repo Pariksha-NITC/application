@@ -11,7 +11,7 @@ router.get('/', studentProtected, async(req,res) => {
 	console.log('Inside student');
 	const quizzes = await db.any('SELECT * FROM quiz WHERE quizid IN(SELECT quizid FROM studentquiz WHERE studentid=$1)',[req.session.userID]);
 	const logMessage = 'Quizzes displayed to student';
-	console.log(logMessage, quizzes);
+	// console.log(logMessage, quizzes);
 	//const quizzes = await executeQuery(query,logMessage)
 	res.render('studentHome', {quizArray:quizzes});
 	/*console.log(quizzes);
@@ -46,9 +46,9 @@ router.post('/addQuiz', studentProtected, async(req,res) => {
 	
 })
 
-router.post('/viewQuiz', studentProtected, async(req,res) =>{
-	let quizid = req.body.qzcode;
-	let response = await db.one('SELECT status FROM studentquiz WHERE quizid=$1 AND studentid=$2',[req.body.qzcode,req.session.userID]);
+router.get('/viewQuiz', studentProtected, async(req,res) =>{
+	let quizid = req.query.qzcode;
+	let response = await db.one('SELECT status FROM studentquiz WHERE quizid=$1 AND studentid=$2',[quizid,req.session.userID]);
 	
 	let quizDetails = await db.one('SELECT * FROM quiz WHERE quizid=$1',[quizid]);
 	let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);;
@@ -60,12 +60,13 @@ router.post('/viewQuiz', studentProtected, async(req,res) =>{
 		let instructor = await db.one('SELECT name FROM userdetails WHERE userid=$1',[quizDetails.teacherid]);
 		quizDetails.attemptmarks = await db.one('SELECT SUM(marksawarded) FROM response,question WHERE studentid=$1 AND quizid=$2 AND response.qnid=question.qnid',[req.session.userID,quizid]);
 		quizDetails.attemptmarks = quizDetails.attemptmarks.sum
-		console.log(quizDetails.attemptmarks)
-		res.render('reviewHome',{quiz:quizDetails});
+		// console.log(quizDetails.attemptmarks)
+		return res.render('reviewHome',{quiz:quizDetails});
 	}
 	else
-		res.render('qhmp',{quiz:quizDetails})
+		return res.render('qhmp',{quiz:quizDetails})
 })
+
 router.post('/initiateAttempt',async(req,res) => {
 	let qzcode = req.body.qzcode;
 	req.session.qzcode = qzcode;
@@ -104,8 +105,8 @@ router.post('/initiateAttempt',async(req,res) => {
 	}
 	let question = await db.one('SELECT * FROM question WHERE quizid=$1 AND qnid=$2',[qzcode,qnNumberArr[0]]);
 	req.session.question=question;
-	console.log(qnNumberArr);
-	console.log(req.session.quizDuration);
+	// console.log(qnNumberArr);
+	// console.log(req.session.quizDuration);
 	res.render('quizAttempt',{layout:null,questions:questions,question:question,currentQnNumber:req.session.qnNumber, 
 		quizTime:req.session.quizDuration, timeNow:req.session.startTime});
 	//res.send("Successfully attempted");
@@ -167,8 +168,12 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 			await db.none('UPDATE response SET response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
 		else if(question.type == 'mcq')
 			await db.none('UPDATE response set response=ARRAY[$3] WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
-		else if(question.type == 'msq')
+		else if(question.type == 'msq') {
+			if (typeof req.body.ans == 'string') {
+				req.body.ans = [req.body.ans]
+			}
 			await db.none('UPDATE response set response=$3 WHERE qnid=$1 AND studentid=$2',[qnNumberArr[qnum],req.session.userID,req.body.ans]);
+		}
 	}
 	else
 	{
@@ -240,6 +245,7 @@ router.post('/saveAndNavigate',checkTime,async(req,res) => {
 	}
 	
 });
+
 router.post('/saveAndEnd',checkAttemptStatus,async(req,res) => {
 	// console.log(req.body);
 	let qnNumberArr = req.session.qnNumberArr;

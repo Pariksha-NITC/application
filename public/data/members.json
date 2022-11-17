@@ -1,0 +1,36 @@
+{
+    "count": "4",
+    "members": [
+        {
+            "name": "V Srijith",
+            "email": "srijith_b190410cs@nitc.ac.in",
+            "rollno": "B190410CS",
+            "cv" : "https://drive.google.com/file/d/19y68jDWElziyMT7Us39vaWKcTQJFBsfV/preview",
+            "phoneno": ""
+        },
+
+        {
+            "name": "S Atheshwaran",
+            "email": "atheshwaran_b190003cs@nitc.ac.in",
+            "rollno": "B190003CS",
+            "cv" : "https://drive.google.com/file/d/1vsQXLOWlyVnk_rHEGkyNCgPkPaqM9Tnf/preview",
+            "phoneno": ""
+        },
+
+        {
+            "name": "Kallupalli Sai Mineesh Reddy",
+            "email": "sai_b190305cs@nitc.ac.in",
+            "rollno": "B190305CS",
+            "cv" : "https://drive.google.com/file/d/1LP33Kd_70TiQHFuV4pDd5tgy0Rdsq7TN/preview",
+            "phoneno": ""
+        },
+
+        {
+            "name": "Ayush Peter Junior",
+            "email": "ayush_b190921cs@nitc.ac.in",
+            "rollno": "B190921CS",
+            "cv" : "https://drive.google.com/file/d/1z67epsd16oIeg6eSmngbswxOkOIiua3U/preview",
+            "phoneno": ""
+        }
+    ]
+}

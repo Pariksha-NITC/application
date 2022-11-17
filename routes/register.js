@@ -23,7 +23,7 @@ router.post('/', async (req,res) => {
 			await db.none('INSERT INTO userdetails(userid,name,role,approved) VALUES ($1,$2,$3,TRUE)', [userID,name,role]);
 		else
 			await db.none('INSERT INTO userdetails(userid,name,role) VALUES ($1,$2,$3)', [userID,name,role]);
-		console.log('User successfully added');
+		// console.log('User successfully added');
 		res.render("login");
 	}
 	catch(e) {

@@ -1,0 +1,179 @@
+
+
+
+.membs {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+    width: 100%;
+	height: 100%;
+}
+
+.membs-selected {
+    width: 50%;
+}
+
+.membs-table-div {
+	overflow: scroll;
+	min-height: 65vh;
+}
+
+.membs-table {
+    width: 90%;
+	/* min-width: 45rem; */
+    border: 1px solid black;
+    margin: 5%;
+    border-collapse: collapse;
+	
+}
+
+.membs-data:hover {
+    background-color: #d6d6f5;
+    cursor: pointer;
+}
+
+.membs-data-selected {
+	background-color: #8080f3;
+	font-weight: bold;
+	font-size: large;
+}
+
+.membs-table th, td {
+    text-align: left;
+    border: 1px solid #3333cc8f;
+    padding: 2%;
+	text-overflow:clip;
+	overflow: hidden;
+	/* white-space: nowrap; */
+}
+
+.membs-table th {
+	overflow-x: hidden;
+	resize: horizontal;
+}
+.viewer {
+    position: relative;
+    height: 100%;
+    float: right;
+    right: -50%;
+    width: 50%;
+    transform: translateX(0%);
+    transition: transform 0.5s ease-in;
+    z-index: 1;
+}
+
+.viewer-selected {
+	transform: translateX(-100%);
+}
+
+.viewer-hidden {
+    width: 0%;
+}
+
+.close-cv-button {
+	display: none;
+	cursor: pointer;
+	width: 95%;
+	background-color: rgb(196, 65, 65);
+	color: aliceblue;
+	border: none;
+	text-align: center;
+	border-radius: 5px;
+	font-weight: bold;
+	height: 5%;   	
+	margin: 2.5%;
+	
+}
+
+.close-cv-button-active {
+	display: none;;
+}
+
+.loader {
+	display: block;
+	border: 8px solid #ececec;
+	border-top: 8px solid #3333cc;
+	border-radius: 50%;
+	width: 64px;
+	height: 64px;
+	animation: spin 1s linear infinite;
+}
+
+
+.loader-div {
+	position: fixed;
+	display: block;
+	transform: translateX(0%);
+    transition: transform 0.5s ease-in;
+	right: -50vw;
+	z-index: 1;
+}
+
+.loader-div-visible {
+	transform: translateX(-73vw);
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+
+/* Mobile Compability */
+
+@media screen and (max-width:768px) {
+	.flexx {
+		height: 82.5%;
+	}
+	
+	.viewer {
+		right: -100%;
+		width: 100%;
+		transform: translateX(0%);
+		transition: transform 0.1s;
+	}
+
+	.close-cv-button-active {
+		display: block;
+	}
+	
+	
+	.viewer-selected {
+		transform: translateX(-100%);
+	}
+
+	.viewer-hidden {
+		width: 0%;
+	}
+
+	.membs-selected {
+		display: none;
+	}
+
+	.loader-div-visible {
+		transform: translateX(-93vw);
+	}
+}
+
+.heading1{
+	display: block;
+	top: 0;
+    font-size: 60px;
+	margin-top: 5%;
+    margin-left: 5%;
+	font-family: "Nunito";
+}
+
+.description{
+
+    font-size: 20px;
+	color: #3333cc5e;
+	display: inline;
+	font-style: italic;
+	margin-left: 8%;
+}

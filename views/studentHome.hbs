@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="../stylesheets/style.css">
+	<link rel="stylesheet" href="../css/style.css">
 	<script>
 		function toggleRightPanel() {
 			if (document.getElementById("right_panel").style.display == "inline") {
@@ -231,7 +231,7 @@
 	<ul>
 	{{#each quizArray}}
 		<li>
-			<form action="/student/viewQuiz" method="post">
+			<form action="/student/viewQuiz" method="get">
 			<input type="hidden" name="qzcode" value={{quizid}}>
 			<a href="#" onclick="this.parentNode.submit()">{{ quizname }}</a>
 			</form>

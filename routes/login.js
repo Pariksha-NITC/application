@@ -31,12 +31,13 @@ router.post('/login',async(req,res) => {
 	 	let user = await db.one('SELECT userid,password FROM login WHERE userid=$1', [userID]);
 	 	let userRole = await db.one('SELECT role FROM userdetails WHERE userid=$1', [userID]);
 		const match = await bcrypt.compare(passwd, user.password);
+		// const match = (passwd == user.password)
 	 	if (match) {
 	 		var session = req.session;
 	 		session.userID=userID;
 	 		session.role=userRole.role;
 	 		// console.log(req.session);
-	 		console.log('Log in successful');
+	 		// console.log('Log in successful');
 			// await db.none('UPDATE login SET loggedin=TRUE WHERE userid=$1', [userID]);
 			// console.log(userRole.role);
 			if(userRole.role === 'student')
