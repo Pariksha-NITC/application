@@ -30,11 +30,14 @@ router.post('/addQuizDetails', teacherProtected,async(req,res) => {
 	let instructions = req.body.instructions;
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	if(req.body.qzid != null){
+		duration = req.body.duration1 * 60 * 1000;
 		await db.none('UPDATE quiz SET quizname=$1,duration=$2,totalmarks=$3,passkey=$4,instructions=$5 WHERE quizid=$6',[qtitle,duration,marks,passkey,instructions,req.body.qzid]);
+		duration = duration / (60 * 1000) ; 	
 		res.render('createQues',{qexistence: "false",questions:questions,qzid:req.body.qzid,qtitle:qtitle,duration1:duration,marks:marks,passkey:passkey,instructions:instructions});
 	}
 	else{
 		let x=await db.any('INSERT INTO quiz(quizname,duration,totalmarks,passkey,instructions,teacherid) VALUES ($1,$2,$3,$4,$5,$6) RETURNING quizid', [qtitle,duration,marks,passkey,instructions,req.session.userID]);
+		duration = duration / (60 * 1000) ;
 		res.render('createQues',{qexistence: "false",questions:questions,qzid:x[0]['quizid'],qtitle:qtitle,duration1:duration,marks:marks,passkey:passkey,instructions:instructions});
 	}	
 })

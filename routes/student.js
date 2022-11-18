@@ -355,7 +355,7 @@ router.post('/navigate',async(req,res) => {
 		else if(question.type == 'msq')
 			ans = response[0].response;
 		console.log(ans);
-		res.render('quizReview',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:ans, duration:{min:duration_minutes, sec:duration_seconds}});
+		res.render('quizReview',{layout:null,qzcode:qzcode,numiter:qnids.length,question:question,currentQnNumber:qnum,ans:ans, duration:{min:duration_minutes, sec:duration_seconds}, marksawarded:response[0].marksawarded});
 	}
 	else
 	{

@@ -86,19 +86,19 @@
     </nav>
 
     <div id="subject" >
-        <div class="course">Course : Web Programming</div>
+        {{!-- <div class="course">Course : Web Programming</div> --}}
         <div class="instructors">Instructors : {{quiz.instructor}}</div>
-        <div class="evaluators">Evaluators : Atheshwaran, Srijith, Ayush, Mineesh</div>
+        {{!-- <div class="evaluators">Evaluators : Atheshwaran, Srijith, Ayush, Mineesh</div> --}}
     </div>
     <div id="details">
         <div class="title"> <h2>{{quiz.quizname}}</h2> </div>
         <div class="instructions">
             Please go through the following instructions carefully
             <ol>
-                <li>In Quiz, the questions will be sequential and you are allowed to have only one attempt</li>
+                <li>In Quiz, you are allowed to have only one attempt</li>
                 <li>Please keep a few white sheets & Pen with you before starting the quiz</li>
                 <li>There will be no marks awarded for the worked-out sheets </li>
-                <li>Test-2 marks for each part will be fully based on the questions that you attempted and submitted in the respective Quiz link </li>
+                <li>{{quiz.instructions}}</li>
             </ol>
         </div>
     </div>
