@@ -2,7 +2,7 @@
 
 <head>
 	<link rel="stylesheet" href="/css/style.css">
-	<script src="togglePanel.js"></script>
+	<script src="/js/togglePanel.js"></script>
 	<link rel="stylesheet" href="/css/teacherHome.css">
 </head>
 
@@ -28,17 +28,19 @@
 	</div>
 	<div id="QuizList">
 	<table>
+		<tr>
+			<th><b>Quiz Title</b></th>
+			<th><b>Quiz Code</b></th>
+		</tr>
 	{{#each quizArray}}
 		<tr>
 			<td><b>{{quizname}}</b></td>
+			<td><b>{{quizid}}</b></td>
 			<td><form action="/teacher/makeQuestions" method="post" style="display:inline">
 				<input type="hidden" name="qzid" value="{{quizid}}">
 				<div class="submit" style="padding:4%;margin-left:0%">
 					<input type="Submit" value="Update">
 				</div>
-			</form></td>
-			<td><form action="/teacher/viewQuestions" method="post" style="display:inline">
-				<input type="submit" value="View">
 			</form></td>
 			<td>
 				<button onclick="location.href='/teacher/evaluatequestions?quizid={{quizid}}'" style="display:inline">Evaluate</button>

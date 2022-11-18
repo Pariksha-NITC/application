@@ -1,0 +1,131 @@
+body {
+    margin: 0px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+#app_header {
+    background-color: #d6d6f5;
+    color: #3333cc;
+    height: clamp(45px, 9vh, 55px);
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-align: center;
+    padding-top: 20px;
+    font-family: sans-serif;
+    border-bottom: 1px solid black;
+}
+
+#details {
+    height: 50vh;
+    display: flex;
+    justify-content: left;
+    background-color: #dccae0;
+    margin: auto;
+    height: 2%;
+    padding: 2% 5%;
+    flex-direction: column;
+}
+
+#qstn {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: left;
+    background-color: #d2a7f0;
+    height: 5%;
+    padding: 2% 5%;
+}
+
+#options {
+    justify-content: space-around;
+    align-items: left;
+    background-color: #d2a7f0;
+    height: 5%;
+    padding: 2% 5%;
+    flex-direction: column;
+}
+
+#limits {
+    justify-content: space-around;
+    align-items: left;
+    background-color: #d2a7f0;
+    height: 5%;
+    padding: 1% 5%;
+    flex-direction: column;
+}
+
+#action_area {
+    padding: 10px;
+    display: flex;
+    border-top: 2px solid rgb(216, 62, 62);
+    float: down;
+    gap: 10px;
+    z-index: 1;
+}
+
+#right_panel {
+    display: none;
+    
+    background-color: #dccae0;
+    width: 20.4%;
+    float: right;
+    height: 75%;
+    z-index: 2;
+}
+
+#evaluation_panel {
+    display: inline;
+    background-color:#dccae0;
+    width: 29%;
+    float: right;
+    height: 75%;
+    z-index: 2;
+    overflow:auto;
+}
+
+#questions_panel{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap:8%;
+    row-gap:2%;
+    background-color:#ecb6f8;
+    align-content:center;
+    height:30%;
+    z-index: 3;
+    padding:5px;
+    padding-bottom:10%;
+    overflow:auto;
+}
+
+.qn_button{
+    background-color:#e9e9e9;
+    flex: 0 1 21%;
+    border : 1px solid grey;
+    padding:20px;
+    margin:4px;
+    border-radius:10px 0px 0px 0px;
+    text-align:center;
+    height:85%;
+    width:85%;
+    cursor:pointer;
+    box-shadow : 5px 5px 5px lightgrey;
+}
+.qn_button:hover{
+    transition-duration:0.05s;
+    font-size:17px;
+    margin:0px;
+    background-color:#f1f1e7;
+    box-shadow : 7px 7px 5px lightgrey;
+}
+#palname {
+    padding: 5%;
+    border-radius: 5%;
+}
+#main_area{
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align:justify;
+    
+}

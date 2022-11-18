@@ -42,7 +42,8 @@ router.post('/addQuizDetails', teacherProtected,async(req,res) => {
 router.post('/makeQuestions', teacherProtected,async (req,res) => {
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	let x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
-	res.render('createQues',{qexistence: "false",questions:questions,qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration1:x[0]['duration'],marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
+	let dur = x[0]['duration'] / (60 * 1000) ;
+	res.render('createQues',{qexistence: "false",questions:questions,qzid:x[0]['quizid'],qtitle:x[0]['quizname'],duration1:dur,marks:x[0]['totalmarks'],passkey:x[0]['passkey'],instructions:x[0]['instructions']});
 })
 
 router.post('/evaluate',async (req,res) => {
@@ -57,11 +58,12 @@ router.post('/createQues',teacherProtected,async (req,res) => {
 		x=await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]);
 		let y = await db.any('SELECT * FROM question where qnid=$1',[req.body.qnid]);
 		x = await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+		let dur = x[0]['duration'] / (60 * 1000) ;
 		res.render('createQues',{questions:questions,
 		qzid:x[0]['quizid'],
 		qnid:req.body.qnid,
 		qtitle:x[0]['quizname'],
-		duration1:x[0]['duration'],
+		duration1:dur,
 		marks:x[0]['totalmarks'],
 		passkey:x[0]['passkey'],
 		instructions:x[0]['instructions'],
@@ -92,11 +94,12 @@ router.post('/queryQuestions',teacherProtected,async (req,res) => {
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	let y = await db.any('SELECT * FROM question where qnid=$1',[qNumber]);
 	let x = await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	let dur = x[0]['duration'] / (60 * 1000) ;
 	res.render('createQues',{questions:questions,
 	qzid:x[0]['quizid'],
 	qnid:qNumber,
 	qtitle:x[0]['quizname'],
-	duration1:x[0]['duration'],
+	duration1:dur,
 	marks:x[0]['totalmarks'],
 	passkey:x[0]['passkey'],
 	instructions:x[0]['instructions'],
@@ -116,11 +119,12 @@ router.post('/queryQuestions',teacherProtected,async (req,res) => {
 router.post('/createPage',teacherProtected, async (req,res)=>{
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	let x = await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	let dur = x[0]['duration'] / (60 * 1000) ;
 	res.render('createQues',{questions:questions,
 		qzid:x[0]['quizid'],
 		
 		qtitle:x[0]['quizname'],
-		duration1:x[0]['duration'],
+		duration1:dur,
 		marks:x[0]['totalmarks'],
 		passkey:x[0]['passkey'],
 		instructions:x[0]['instructions'],
@@ -135,11 +139,12 @@ router.post('/deleteQuestion',teacherProtected,async (req,res)=>{
 	}
 	let questions = await db.any('SELECT qnid FROM question WHERE quizid=$1',[req.body.qzid]);
 	x = await db.any('SELECT * from quiz where quizid=$1',[req.body.qzid]); 
+	let dur = x[0]['duration'] / (60 * 1000) ;
 	res.render('createQues',{questions:questions,
 		qzid:x[0]['quizid'],
 		
 		qtitle:x[0]['quizname'],
-		duration1:x[0]['duration'],
+		duration1:dur,
 		marks:x[0]['totalmarks'],
 		passkey:x[0]['passkey'],
 		instructions:x[0]['instructions'],
